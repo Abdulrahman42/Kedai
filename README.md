@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./logo.png" width="300"/><br>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/bbaa0816-0105-49b8-a844-4c11e62575b0/ic_launcher.png" width="300"/><br>
 </h1>
 
 ## Important
@@ -13,13 +13,13 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 ## Screenshots
 
 <p float="left">
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/d864a7bd-7fb0-4cb6-8cd0-288bf6d14fe0/embed" width="200" height="350" alt="Choose a Service Type"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/d864a7bd-7fb0-4cb6-8cd0-288bf6d14fe0/Screenshot_20190903-175723.png" width="200" height="350" alt="Choose table number"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/b8e3b04e-2a6d-421c-bf62-17573332930d/00000963.png" width="200" height="350" alt="Pick Location"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/f89f49ba-c91b-492b-91f0-521767c54c20/Screenshot_20190903-204511.png" width="200" height="350" alt="Choose category"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/5d6ff57a-4f5f-4f0b-93ba-e38fccc91223/00000964.png" width="200" height="350" alt="Finding the truck"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/fbc1c660-9a5e-4c52-a73f-ec25ba685846/Screenshot_20190903-204518.png" width="200" height="350" alt="Choose menu"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/e7f85fb0-3c45-4818-a362-ab1026d9ff44/00000965.png" width="200" height="350" alt="Order History"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/7fe85435-7cad-4f51-a6a0-1cd6ad80d67a/Screenshot_20190903-204526.png" width="200" height="350" alt="View bill"/>
 </p>
 
 
@@ -29,11 +29,11 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 * self payment
 
 
-## Why Iyat?
+## Why Kedai DW?
 * Out of the box app of the year!
 * It's React Native, so it support android & iOS by default!
 * Simple Code, so you can easily contribute on it.
-* Meteor is one of the most starred javascript framework, and it is very easy to use
+* Express is one of the most starred javascript framework, and it is very easy to use
 
 ## Tech Stack
 * React Native for the Mobile Frontend

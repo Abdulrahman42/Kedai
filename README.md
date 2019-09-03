@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/bbaa0816-0105-49b8-a844-4c11e62575b0/ic_launcher.png" width="300"/><br>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519537/KEDAI_DW/ic_launcher_dwijpb.png" width="300"/><br>
 </h1>
 
 ## Important
@@ -13,15 +13,15 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 ## Screenshots
 
 <p float="left">
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/d864a7bd-7fb0-4cb6-8cd0-288bf6d14fe0/Screenshot_20190903-175723.png" width="200" height="350" alt="Choose table number"/>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519552/KEDAI_DW/Screenshot_20190903-175723_oxh8hq.png" width="200" height="350" alt="Choose table number"/>
 
- <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/f89f49ba-c91b-492b-91f0-521767c54c20/choosecategory.png" width="200" height="350" alt="Choose menu"/>
+ <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519553/KEDAI_DW/Screenshot_20190903-204511_ckjq8l.png" width="200" height="350" alt="Choose category"/>
  
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/f89f49ba-c91b-492b-91f0-521767c54c20/Screenshot_20190903-204511.png" width="200" height="350" alt="Choose category"/>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519559/KEDAI_DW/Screenshot_20190903-204518_xeyn08.png" width="200" height="350" alt="Choose menu"/>
 
  
 
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/7fe85435-7cad-4f51-a6a0-1cd6ad80d67a/Screenshot_20190903-204526.png" width="200" height="350" alt="View bill"/>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519550/KEDAI_DW/Screenshot_20190903-204526_p14xsu.png" width="200" height="350" alt="View bill"/>
 </p>
 
 

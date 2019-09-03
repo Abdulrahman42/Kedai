@@ -13,7 +13,7 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 ## Screenshots
 
 <p float="left">
-  <img src="https://www.screencast.com/t/kkp5AkzKOdT" width="200" height="350" alt="Choose a Service Type"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/d864a7bd-7fb0-4cb6-8cd0-288bf6d14fe0/embed" width="200" height="350" alt="Choose a Service Type"/>
 
   <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/b8e3b04e-2a6d-421c-bf62-17573332930d/00000963.png" width="200" height="350" alt="Pick Location"/>
 

@@ -17,7 +17,7 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 
   <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/f89f49ba-c91b-492b-91f0-521767c54c20/Screenshot_20190903-204511.png" width="200" height="350" alt="Choose category"/>
 
-  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/fbc1c660-9a5e-4c52-a73f-ec25ba685846/Screenshot_20190903-204518.png" width="200" height="350" alt="Choose menu"/>
+  <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/f89f49ba-c91b-492b-91f0-521767c54c20" width="200" height="350" alt="Choose menu"/>
 
   <img src="https://www.screencast.com/users/mamanrahman20141/folders/Default/media/7fe85435-7cad-4f51-a6a0-1cd6ad80d67a/Screenshot_20190903-204526.png" width="200" height="350" alt="View bill"/>
 </p>
@@ -73,7 +73,7 @@ $ express #run your express on http://localhost:5000
 * email: mamanrahman20141996@gmail.com
 
 ## Presentation Slide
-(https://drive.google.com/file/d/1lYRSFJGEQBTIDQBxgJjaEIn0CThtomGy/view?usp=sharing)
+https://drive.google.com/file/d/1lYRSFJGEQBTIDQBxgJjaEIn0CThtomGy/view?usp=sharing
 ----
 
 ## License

@@ -6,17 +6,14 @@
 This project is still on very early development stage. If you want to use for production, use it with your own risk.
 <br>More feature Coming Really Soon.
 
-## Iyat
-Iyat is a Vacum Toilet Truck Finder App. We are ready to help, when Your 💩💩💩 stuck in your water closet.  
+## Kedai DW
+Kedai DW is modern app for self service restaurant. we are ready to help solve restaurant problems with minimum operational costs.  
 
-Click to Watch Video on Youtube:
-
-[![Iyat Video](https://img.youtube.com/vi/f5fHm3I7Exk/0.jpg)](https://www.youtube.com/watch?v=f5fHm3I7Exk)
 
 ## Screenshots
 
 <p float="left">
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/55fda3a2-425f-4890-b027-660a8a80285d/00000962.png" width="200" height="350" alt="Choose a Service Type"/>
+  <img src="https://drive.google.com/file/d/1KERsNpwC3uVJtmC5h0w561Wro60MWTSN/view?usp=sharing" width="200" height="350" alt="Choose a Service Type"/>
 
   <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/b8e3b04e-2a6d-421c-bf62-17573332930d/00000963.png" width="200" height="350" alt="Pick Location"/>
 
@@ -27,10 +24,10 @@ Click to Watch Video on Youtube:
 
 
 ## Features
-* Choose a Service type
-* Pick Location
-* Finding the truck
-* Order History
+* Choose your food
+* list order
+* self payment
+
 
 ## Why Iyat?
 * Out of the box app of the year!
@@ -40,19 +37,19 @@ Click to Watch Video on Youtube:
 
 ## Tech Stack
 * React Native for the Mobile Frontend
-* MeteorJs as the Backend
+* ExpressJs as the Backend
 
 ## Prerequisites
 * Make sure You had been install NodeJs in your system https://nodejs.org/
 * Then install React Native https://facebook.github.io/react-native/
-* Don’t forget Meteor Js as the backend https://www.meteor.com/
+* Don’t forget Express Js as the backend https://expressjs.com/
 
 ## Installation & Configuration
 Follow these step to install
 
 **Frontend:**
 ```
-$ git clone https://github.com/DumbWaysDotId/course-repo-example
+$ https://github.com/Abdulrahman42/Kedai.git
 $ cd course-repo-example/frontend
 $ npm install
 $ react-native run-ios #for ios
@@ -78,16 +75,13 @@ $ meteor #run your meteor on http://localhost:3000
 * WA/TELEGRAM: +62 85 333 654 729
 * email: mamanrahman20141996@gmail.com
 
-## Download App (Demo usage only)
-[![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://linktodownload.com/course-repo-example.apk)
-
 ## Presentation Slide
-https://drive.google.com/file/d/1lYRSFJGEQBTIDQBxgJjaEIn0CThtomGy/view?usp=sharing
+(https://drive.google.com/file/d/1lYRSFJGEQBTIDQBxgJjaEIn0CThtomGy/view?usp=sharing)
 ----
 
 ## License
 
-BSD 3-Clause License
+MIT License
 
 See [LICENSE](LICENSE)
 

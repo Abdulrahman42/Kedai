@@ -13,7 +13,7 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 ## Screenshots
 
 <p float="left">
-  <img src="https://drive.google.com/file/d/1KERsNpwC3uVJtmC5h0w561Wro60MWTSN/view?usp=sharing" width="200" height="350" alt="Choose a Service Type"/>
+  <img src="https://www.screencast.com/t/kkp5AkzKOdT" width="200" height="350" alt="Choose a Service Type"/>
 
   <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/b8e3b04e-2a6d-421c-bf62-17573332930d/00000963.png" width="200" height="350" alt="Pick Location"/>
 
@@ -50,21 +50,18 @@ Follow these step to install
 **Frontend:**
 ```
 $ https://github.com/Abdulrahman42/Kedai.git
-$ cd course-repo-example/frontend
+$ cd kedai
 $ npm install
 $ react-native run-ios #for ios
 $ react-native run-android #for android
 ```
-Open “app/Config.js”, and set the meteorUri variable as your Meteor server run at
-```javascript
-export const meteorUri = ‘ws://localhost:3000/websocket’;
-```
 
 **Back-end:**
 ```
-$ cd course-repo-example/backend
-$ meteor npm install
-$ meteor #run your meteor on http://localhost:3000
+$ https://github.com/Abdulrahman42/backend-kedai.git
+$ backend-kedai
+$ express npm install
+$ express #run your express on http://localhost:5000
 ```
 
 ## Support Me :)

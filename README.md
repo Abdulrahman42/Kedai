@@ -19,6 +19,8 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
  
  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519550/KEDAI_DW/Screenshot_20190903-204526_p14xsu.png" width="200" height="350" alt="View bill"/>
  
+ <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567856144/KEDAI_DW/Screenshot_20190907-183311_zxirte.png" width="200" height="350" alt="Choose menu"/>
+ 
   <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519558/KEDAI_DW/Screenshot_20190903-204532_dovq24.png" width="200" height="350" alt="Choose menu"/>
   
 </p>

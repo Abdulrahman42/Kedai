@@ -1,63 +1,33 @@
 import React, {Component} from 'react';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import { YellowBox } from "react-native"
+
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import {Provider} from 'react-redux';
-import store from './src/_redux/store';
+import store from './src/redux/store';
 
-import home from './src/screen/home';
-import listmenu from './src/screen/listmenu';
-import menu from './src/screen/menu';
-import bill from './src/screen/bill';
-import done from './src/screen/done';
-import order from './src/screen/order';
+import menunavigation from './src/navigation/menunavigation'
+import index from './src/screen/menu/index'
 
-const AppNavigator = createStackNavigator({
-  home: {
-    screen: home,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  listmenu: {
-    screen: listmenu,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  menu: {
-    screen: menu,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  bill: {
-    screen: bill,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  done: {
-    screen: done,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  order: {
-    screen: order,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
+const MainNav = createAppContainer(createSwitchNavigator({
 
-const AppContainer = createAppContainer(AppNavigator);
+  menunavigation: {
+    screen: menunavigation
+  },
+        index: {
+          screen: index
+        },
+})
+)
+YellowBox.ignoreWarnings([
+  "Warning: ViewPagerAndroid has been extracted",
+])
 
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppContainer />
-      </Provider>
-    );
-  }
+
+const App = () => {
+return (
+  <Provider store={store}>
+    <MainNav />
+  </Provider>
+)
 }
-export default App;
+export default App

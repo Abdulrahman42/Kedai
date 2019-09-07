@@ -4,6 +4,7 @@ import {StyleSheet, StatusBar, View} from 'react-native';
 
 class bill extends React.Component {
   render() {
+    const { goBack } = this.props.navigation;
     return (
       <View style={{flex: 1}}>
         <View style={styles.container}>
@@ -45,25 +46,20 @@ class bill extends React.Component {
               width: '100%',
               marginVertical: 15,
             }}></View>
-
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'space-between',
               backgroundColor: '#d1d8e0',
-              height: 130,
+              height: 150,
               width: '100%',
               borderRadius: 5,
             }}>
             <View style={{flex: 1}}>
               <Text style={styles.bill}>Sub Total</Text>
-
               <Text style={styles.bill}>Discount</Text>
-
               <Text style={styles.bill}>Service Charge(5.5%)</Text>
-
               <Text style={styles.bill}>Tax(10%)</Text>
-
               <Text
                 style={{
                   textAlign: 'left',
@@ -74,16 +70,11 @@ class bill extends React.Component {
                 Total
               </Text>
             </View>
-
             <View style={{flex: 1}}>
               <Text style={styles.bill}>10.000</Text>
-
               <Text style={styles.bill}>0</Text>
-
               <Text style={styles.bill}>500</Text>
-
               <Text style={styles.bill}>1.000</Text>
-
               <Text
                 style={{
                   textAlign: 'left',
@@ -109,9 +100,8 @@ class bill extends React.Component {
               mode="contained"
               color="#e37171"
               style={{width: '50%'}}
-              onPress={() => {
-                this.props.navigation.navigate('done');
-              }}>
+              onPress={()=> goBack()}>
+              
              
               <Text style={{color: '#FFF', fontSize: 18}}>Call Bill</Text>
             </Button>

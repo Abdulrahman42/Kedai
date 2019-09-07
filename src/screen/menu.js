@@ -13,10 +13,9 @@ import {
 // import { Icon } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
-import {Card} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import {getMenuByCategory} from '../_actions/menus';
-import {Button} from 'react-native-paper';
+import {Button, Card} from 'react-native-paper';
 
 class menus extends Component {
   constructor() {
@@ -83,7 +82,7 @@ class menus extends Component {
       'Are you sure to order this ?',
       [
         {text: 'NO', onPress: () => console.warn(), style: 'cancel'},
-        {text: 'YES', onPress:() => this.props.navigation.navigate('bill')},
+        {text: 'YES', onPress:() => this.props.navigation.navigate('done')},
       ]
     );
   }
@@ -101,7 +100,7 @@ class menus extends Component {
     }
     return (
       <View style={styles.FlatList}>
-        <Card image={{uri: item.image}}>
+        <Card image={{uri: ''}}>
           <View
             style={{
               flexDirection: 'row',
@@ -175,7 +174,7 @@ class menus extends Component {
           )}
         </View>
         <View style={{flexDirection: 'row'}}>
-          <View>
+          <View style={{width:'40%'}}>
             <Button
               style={{backgroundColor: '#e37171'}}
               mode="contained"
@@ -183,17 +182,17 @@ class menus extends Component {
               List Order
             </Button>
           </View>
-          <View style={{paddingHorizontal: 10}}>
+          <View style={{paddingHorizontal: 10, width:'40%'}}>
             <Button
               style={{backgroundColor: '#e37171'}}
               mode="contained"
-              onPress={this.button}>
+              onPress={()=> this.button()}>
               Confirm
-            </Button>
+              </Button>
           </View>
-          <View>
+          <View style={{width:'20%'}}>
             <Button
-              style={{backgroundColor: '#e37171'}}
+              style={{backgroundColor: '#e37171', }}
               mode="contained"
               onPress={() => this.props.navigation.navigate('bill')}>
               Bill
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   FlatList: {
-    // flex: 1,
+    flex: 1,
     // padding: 0,
   },
   header: {
@@ -241,12 +240,10 @@ const styles = StyleSheet.create({
   textContent: {
     marginLeft: 20,
     fontSize: 15,
-    // color: night,
     width: '70%',
   },
   textHeader: {
     fontSize: 23,
-    // color: night,
     fontWeight: 'bold',
   },
   footer: {
@@ -267,7 +264,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
-    // backgroundColor: yellow,
     height: 50,
     width: '20%',
     borderTopLeftRadius: 30,
@@ -277,7 +273,6 @@ const styles = StyleSheet.create({
   bottom: {
     height: '10%',
     width: '80%',
-    // backgroundColor: night,
     borderRadius: 30,
   },
 });

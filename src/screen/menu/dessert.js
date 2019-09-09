@@ -13,11 +13,11 @@ import {connect} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Card} from 'react-native-paper';
-import {updateDrink, getDrink} from '../../redux/_actions/menus';
+import { getDessert, updateDessert} from '../../redux/_actions/menus';
 import { addToCart, Increment, Decrement } from '../../redux/_actions/orders'
 
 
-class drink extends Component {
+class dessert extends Component {
   constructor() {
     super();
     this.state = {
@@ -33,7 +33,7 @@ class drink extends Component {
     if (data >= 0) {
     } else {
       await this.props.dispatch(
-        updateDrink(item, this.props.menus.drink, this.props.menus.drink),
+        updateDessert(item, this.props.menus.dessert, this.props.menus.dessert),
       );
       await this.props.dispatch(
         addToCart(item, this.props.transaction.data.id),
@@ -61,7 +61,7 @@ class drink extends Component {
   };
 
   componentDidMount() {
-    this.props.dispatch(getDrink());
+    this.props.dispatch(getDessert());
   }
   loading = () => {
     return (
@@ -87,7 +87,7 @@ class drink extends Component {
       rupiah += separator + ribuan.join('.');
     }
 
-    console.log(this.props.menus.Food)
+    // console.log(this.props.menus.Food)
     return (
       <View style={{flex: 1}}>
         <Card style={styles.container}>
@@ -126,7 +126,7 @@ class drink extends Component {
                       {/* <View> */}
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToCart(console.log(this.props.transaction.id) )}>
+                            this.addToCart(item, this.props.transaction.data)}>
                           <MaterialIcons
                             name="add-shopping-cart"
                             size={40}
@@ -170,9 +170,9 @@ class drink extends Component {
                 snapToInterval={270}
                 decelerationRate="normal"
                 showsVerticalScrollIndicator={false}
-                data={this.props.menus.drink}
+                data={this.props.menus.dessert}
                 keyExtractor={extractKey}
-                extraData={this.props.menus.drink}
+                extraData={this.props.menus.dessert}
                 renderItem={this.renderItem}
               />
             </View>
@@ -190,7 +190,7 @@ const mapStateToProps = state => {
     orders: state.orders,
   };
 };
-export default connect(mapStateToProps)(drink);
+export default connect(mapStateToProps)(dessert);
 
 const styles = StyleSheet.create({
   container: {

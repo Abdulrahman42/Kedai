@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import {Text, Button} from 'react-native-paper';
-import {StyleSheet, View, TextInput} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
-import { connect } from 'react-redux'
-import { addTransaction } from '../redux/_actions/transactions'
+import {addTransaction} from '../redux/_actions/transaction';
+import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 
 class home extends Component {
@@ -12,31 +17,36 @@ class home extends Component {
     super();
     this.state = {
       table: null,
-      isLoading: false
-   };
+      isPress: false,
+    };
   }
 
-  onTable = (table) => {
-    this.setState({
-      table
-    })};
-  istable = async () => {
-    await this.setState({
-      isLoading: true
-    })
+  onTable = table => {
+    this.setState({table});
+  };
+  tableSend = async () => {
     if (this.state.table == null) {
       return false;
     } else {
       await AsyncStorage.setItem('tableNumber', this.state.table);
-      await this.props.dispatch(addTransaction({
-        tableNumber: this.state.table,
-        isPaid: false
-      }))
+      await this.props.dispatch(
+        addTransaction({
+          tableNumber: this.state.table,
+          isPaid: 0,
+        }),
+      );
       await this.setState({
-        isLoading: this.props.transactions.isLoading
-      })
-      await AsyncStorage.setItem('transactionId',`${this.props.transactions.dataItem.data.id}`)
+        isPress: true,
+      });
+      await AsyncStorage.setItem(
+        'transactionId',
+        `${this.props.transaction.data.id}`,
+      );
       await this.props.navigation.navigate('index');
+      await this.setState({
+        isPress: false,
+        table: null,
+      });
     }
   };
 
@@ -45,38 +55,48 @@ class home extends Component {
       <LinearGradient
         colors={['#F29492', '#114357']}
         style={styles.linearGradient}>
-      <View >
         <View>
-            <Text style={{color:'#d0d0d0', fontSize:44}}>Kedai DW</Text>
-          <Text>
-          </Text>
+          <View>
+            <Text style={{color: '#d0d0d0', fontSize: 44}}>Kedai DW</Text>
+          </View>
+          <View style={styles.content}>
+            <Text style={{color: '#d0d0d0', fontSize: 20, marginTop: 15}}>
+              Masukan Nomor Meja
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="black"
+              keyboardType="number-pad"
+              onChangeText={this.onTable}></TextInput>
+            {this.state.isPress == false && (
+              <TouchableOpacity onPress={this.tableSend}>
+                <View style={styles.button}>
+                  <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {this.state.isPress == true && (
+              <TouchableOpacity onPress={this.tableSend}>
+                <View style={styles.button}>
+                  <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
+                  <ActivityIndicator size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-        <View style={styles.content}>
-          <Text style={{color: '#d0d0d0', fontSize: 20, marginTop: 15}}>
-            Masukan Nomor Meja
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholderTextColor="black"
-            keyboardType="number-pad"
-            onChangeText={this.onTable}></TextInput>
-          <Button style={styles.button} onPress={this.istable}>
-            <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
-          </Button>
-        </View>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-      transactions: state.transactions
-  }
-}
+    transaction: state.transaction,
+  };
+};
 
-export default connect(mapStateToProps)(home)
+export default connect(mapStateToProps)(home);
 
 const styles = StyleSheet.create({
   linearGradient: {

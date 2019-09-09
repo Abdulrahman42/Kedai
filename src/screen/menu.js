@@ -1,278 +1,209 @@
-import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  StatusBar,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  FlatList,
-} from 'react-native';
-// import { Icon } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/AntDesign';
-import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
-import {getMenuByCategory} from '../_actions/menus';
-import {Button, Card} from 'react-native-paper';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { TouchableOpacity, View, Text, ScrollView, TextInput, ToastAndroid, FlatList, ImageBackground } from 'react-native'
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage'
+import env from '../env/env'
 
-class menus extends Component {
-  constructor() {
-    super();
-    this.state = {
-      table: '',
-      menu: {
-        id: '',
-        qty: 0,
-      },
-    };
-  }
+import { addOrder, updateOrder } from '../redux/_actions/order'
+import { getCategory } from '../redux/_actions/category'
+import { getMenu, getMenuByCategory } from '../redux/_actions/menu'
 
-  async componentDidMount() {
-    const table = await AsyncStorage.getItem('tableNumber');
-    this.setState({
-      table,
-    });
-    console.warn(this.state.menu);
-  }
+class Menu extends Component {
 
-  inc = () => {
-    this.setState({
-      menu: {
-        id: item.id,
-        qty: this.state.menu.qty + 1,
-      },
-    });
-  };
+    constructor(props) {
+        super(props)
+        this.state = {
+            tableNumber: 0,
+            transactionId: 0,
+            menus: [],
+            menuIds: [],
+            counter: 0,
+            second : 0,
+            minute : 0
 
-  dec = () => {
-    if (this.state.menu.qty == 0) {
-      return false;
-    } else {
-      this.setState({
-        menu: {
-          qty: this.state.menu.qty - 1,
-        },
-      });
+        }
     }
-  };
-
-  componentWillMount() {
-    const {navigation} = this.props;
-    const data = navigation.getParam('rows');
-    this.props.dispatch(getMenuByCategory(1));
-  }
-
-  loading = () => {
-    return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignContent: 'center',
-        }}>
-        <ActivityIndicator size={0} color={'yellow'} />
-      </View>
-    );
-  };
-  button() {
-    Alert.alert(
-      'Confirm Order',
-      'Are you sure to order this ?',
-      [
-        {text: 'NO', onPress: () => console.warn(), style: 'cancel'},
-        {text: 'YES', onPress:() => this.props.navigation.navigate('done')},
-      ]
-    );
-  }
-
-  renderItem = ({item}) => {
-    const price = item.price;
-    var number_string = price.toString(),
-      sisa = number_string.length % 3,
-      rupiah = number_string.substr(0, sisa),
-      ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-    if (ribuan) {
-      separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
+    
+    getTableNum = async () => {
+        try {
+            const number = await AsyncStorage.getItem('tableNumber')
+            const id = await AsyncStorage.getItem('transactionId')
+            this.setState({
+                tableNumber: number,
+                transactionId: id,
+            })
+        } catch (e) {
+            console.log(e)
+        }
     }
-    return (
-      <View style={styles.FlatList}>
-        <Card image={{uri: ''}}>
+
+    static navigationOptions = {
+            header: null
+        }
+
+    
+
+    countHandler = async (data) => {
+        let order = this.props.order.addedMenu
+        const index = order.findIndex(item => item.id === data.id)
+
+        if(index >= 0) {
+            let orderData = order[index]
+            let incAmount = orderData.qty + 1
+            let incOrder = {
+                ...orderData,
+                qty: incAmount,
+                sumPrice: await orderData.price * incAmount
+            }
+            order[index] =incOrder
+            ToastAndroid.show(`${orderData.name} ditambahkan`, ToastAndroid.LONG)
+            await this.props.dispatch(updateOrder(order))
+            
+        } else {
+            data = {
+                ...data,
+                qty: 1,
+                status: 0,
+                sumPrice: data.price
+            }
+            ToastAndroid.show(`${data.name} ditambahkan`, ToastAndroid.LONG)
+            await this.props.dispatch(addOrder(data))
+            
+        }
+        
+    }
+
+    menuHandler = (item) => {
+        this.setState({
+            menus: [...this.state.menus, item]
+        })
+    }
+
+    filterHandler = id => () => {
+        this.props.dispatch(getMenuByCategory(id))
+    }
+
+    componentDidMount() {
+        this.getTableNum()
+        axios.get(env.host + 'categories')
+            .then(res => {
+                const category = res.data
+                this.props.dispatch(getCategory(category))
+            })
+        this.props.dispatch(getMenu())
+        this.interval = setInterval(
+            () => this.setState((prevState)=> ({ second: prevState.second + 1 })),
+            1000
+        )
+
+        this.interval = setInterval(
+            () => this.setState((prevState)=> ({ minute: prevState.minute + 1, second : 0 })),
+            59000
+        )
+        
+    }
+
+    componentDidUpdate(){
+        if(this.state.second === 60){ 
+        }
+    }
+
+    async componentWillUnmount(){
+        await clearInterval(this.interval);
+    }
+    
+    loading = () => {
+        return (
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               alignItems: 'center',
+              marginTop: '50%',
             }}>
-            <View>
-              <Text>{item.name}</Text>
-              <Text style={{fontWeight: 'bold', color: '#e37171'}}>
-                Rp.{rupiah}
-              </Text>
+            <ActivityIndicator size={50} color="#e37171" />
+          </View>
+        );
+      };
+    _keyExtractor = (item, index) => item.id
+    render() {
+        
+        return (
+            <View style={{backgroundColor: '#ffffff'}}>
+                <View style={{padding: 20, paddingVertical: 30, flexDirection: 'row', justifyContent:'space-between', backgroundColor: '#ffffff', borderBottomLeftRadius: 40, borderBottomRightRadius: 40, elevation: 20}}>
+                    <Text style={{fontWeight: 'bold', color: '#f4c93e', fontSize: 17}}>Table Number {this.props.navigation.getParam('table')}</Text>
+                    <Text  style={{fontWeight: 'bold', color: '#f4c93e', fontSize: 17}}>{this.state.timer}</Text>                    
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 25}}>
+                    <FlatList 
+                        showsHorizontalScrollIndicator={false}
+                        pagingEnabled={true}
+                        horizontal={true}
+                        data={this.props.category.data}
+                        keyExtractor={this._keyExtractor}
+                        renderItem={({item}) => (
+                            <TouchableOpacity
+                                key={item.id}
+                                onPress={this.filterHandler(item.id)}
+                                style={{marginHorizontal: 15, backgroundColor: '#c82726', padding: 10, borderRadius: 50, elevation: 10, marginBottom: 10}}
+                            >
+                                <Text style={{fontWeight: 'bold', color: '#ffffff'}}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )}
+                        />
+                </View>
+                <View style={{height: 600, backgroundColor: '#f8f8f6', borderTopRightRadius: 50, borderBottomLeftRadius: 50, padding: 10, elevation: 10}}>
+                    <FlatList
+                        numColumns={2}
+                        showsVerticalScrollIndicator={false}
+                        data={this.props.menu.data} 
+                        keyExtractor={this._keyExtractor}
+                        renderItem={(item, index) => (
+                            <TouchableOpacity 
+                                key={index} 
+                                onPress={() => this.countHandler(item.item)}
+                                style={{ justifyContent: 'center', marginHorizontal: 10, height: 130, width: 170, marginTop: 10, borderTopRightRadius: 50, borderBottomLeftRadius: 50}}>
+                                <ImageBackground source={{uri: item.item.imageURL}} imageStyle={{borderTopRightRadius: 20, borderBottomLeftRadius: 50}} style={{ width: '100%', height: '100%'}}>
+                                    <View style={{backgroundColor:'#c82726', opacity: 0.9, borderTopRightRadius: 50, borderBottomLeftRadius: 50}}>
+                                        <Text style={{ alignSelf: 'center', color: '#ffffff'}}>{item.item.name}</Text>
+                                    </View>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                        )} />
+                </View>
+                <View style={{flexDirection:'row', alignItems: 'center', paddingBottom: 2}}>
+                    <TouchableOpacity 
+                        style={{
+                            flex: 1,
+                            paddingTop: 8,
+                            position: 'absolute',
+                            bottom: 2,
+                            backgroundColor:'#f4c93e',
+                            width: 380,
+                            height: 50,
+                            borderRadius: 20,
+                            marginVertical: 140,
+                            marginHorizontal: 15,
+                            elevation: 12,
+                            alignItems: 'center'}}
+                        onPress={() => this.props.navigation.navigate('Order')}
+                    >
+                        <Text  style={{alignSelf: 'center', color: '#000000', fontSize: 20, fontWeight: 'bold'}}>Order</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
-            <View
-              style={{
-                height: 30,
-                width: 90,
-                backgroundColor: 'white',
-                elevation: 2,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingLeft: 5,
-                paddingRight: 5,
-                borderRadius: 5,
-              }}>
-              <TouchableOpacity onPress={this.dec}>
-                <View>
-                  <Icon name="minuscircleo" color="#e37171" size={20} />
-                </View>
-              </TouchableOpacity>
-              <Text>{this.state.menu.qty}</Text>
-              <TouchableOpacity onPress={this.inc}>
-                <View>
-                  <Icon name="pluscircleo" color="#e37171" size={20} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Card>
-      </View>
-    );
-  };
-
-  render() {
-    const extractKey = ({id}) => id.toString();
-    return (
-      <View style={styles.container}>
-        <StatusBar
-          // backgroundColor={}
-          barStyle="dark-content"
-        />
-        <View style={styles.table}>
-          <Text style={{color: 'black', fontWeight: 'bold'}}>
-            No: {this.state.table}
-          </Text>
-          {/* <Text style={{ color: 'black' }}>30.23.00</Text> */}
-        </View>
-        <View>
-          {this.props.menus.isLoading == true && this.loading()}
-          {this.props.menus.isLoading == false && (
-            <View style={{paddingBottom: 0}}>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={this.props.menus.data}
-                renderItem={this.renderItem}
-                keyExtractor={extractKey}
-                style={{marginBottom: 10}}
-              />
-            </View>
-          )}
-        </View>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{width:'40%'}}>
-            <Button
-              style={{backgroundColor: '#e37171'}}
-              mode="contained"
-              onPress={() => this.props.navigation.navigate('order')}>
-              List Order
-            </Button>
-          </View>
-          <View style={{paddingHorizontal: 10, width:'40%'}}>
-            <Button
-              style={{backgroundColor: '#e37171'}}
-              mode="contained"
-              onPress={()=> this.button()}>
-              Confirm
-              </Button>
-          </View>
-          <View style={{width:'20%'}}>
-            <Button
-              style={{backgroundColor: '#e37171', }}
-              mode="contained"
-              onPress={() => this.props.navigation.navigate('bill')}>
-              Bill
-            </Button>
-          </View>
-        </View>
-      </View>
-    );
-  }
+        )
+    }
 }
 
-const mapStateToProps = state => {
-  return {
-    menus: state.menus,
-  };
-};
+const mapStateToProps = (state) => {
+    return {
+        category: state.category,
+        menu: state.menu,
+        order: state.order,
+        transaction: state.transaction
+    }
+}
 
-export default connect(mapStateToProps)(menus);
-
-const styles = StyleSheet.create({
-  table: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  FlatList: {
-    flex: 1,
-    // padding: 0,
-  },
-  header: {
-    flexDirection: 'row',
-    marginBottom: 30,
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-  textContent: {
-    marginLeft: 20,
-    fontSize: 15,
-    width: '70%',
-  },
-  textHeader: {
-    fontSize: 23,
-    fontWeight: 'bold',
-  },
-  footer: {
-    flexDirection: 'row',
-  },
-  search: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#eeeeee',
-    height: 50,
-    width: '80%',
-    borderRadius: 30,
-    paddingLeft: 20,
-  },
-  qr_code: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    marginLeft: 20,
-    height: 50,
-    width: '20%',
-    borderTopLeftRadius: 30,
-    borderBottomLeftRadius: 30,
-    padding: 10,
-  },
-  bottom: {
-    height: '10%',
-    width: '80%',
-    borderRadius: 30,
-  },
-});
+export default connect(mapStateToProps)(Menu)

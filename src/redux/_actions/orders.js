@@ -2,30 +2,93 @@ import axios from 'axios'
 
 import env from '../../env/env'
 
-export const addOrder = (data) => {
+export const addToCart = (data, id) => {
+    dataorder = {
+        menuId: data.id,
+        transactionId: id,
+        price: data.price,
+        qty: 1,
+        name: data.name,
+        categoryId: data.categoryId,
+        status: 0
+    }
     return {
-        type:"ADD_ORDER",
-        payload: axios.post(env.host + "order" , data)
+        type: "ADD_TO_ORDERS",
+        payload: dataorder
     }
 }
 
-export const editOrder = (orderId, data) => {
+export const getCart = (transactionId) => {
     return {
-        type:"EDIT_ORDER",
-        payload: axios.patch(env.host + "order/"+ orderId, data)
+        type: 'GET_CART',
+        payload: axios.get(env.host + 'order/' + transactionId)
     }
 }
 
-export const deleteOrder = (orderId) => {
+export const getCartBack = (data) => {
     return {
-        type: "DELETE_ORDER",
-        payload: axios.delete(env.host + "order/" + orderId)
+        type: 'GET_CART_BACK',
+        payload: data
     }
 }
 
-export const setOrderStatus = (transactionId, data) => {
+export const pushCart = (orders) => {
     return {
-        type: "SET_ORDER_STATUS",
-        payload: axios.patch(env.host + "orderStatus/" + transactionId, data)
+        type: 'PUSH',
+        payload: axios.post(env.host + 'order', orders)
+    }
+}
+
+
+export const UPDATE = (data, datapatch, datafix) => {
+    return {
+        type: 'UPDATE_ORDERS',
+        payload: data,
+        datapatch,
+        datafix
+    }
+}
+
+export const DELETE = (data, datapatch, datafix) => {
+    return {
+        type: 'DELETE_ORDERS',
+        payload: data,
+        datapatch,
+        datafix
+    }
+}
+
+
+export const RESET = () => {
+    return {
+        type: 'RESET_ORDERS'
+    }
+}
+
+export const Increment = (data, datapatch, datafix) => {
+    return {
+        type: 'INCREMENT',
+        payload: data,
+        datapatch,
+        datafix
+    }
+}
+
+
+export const Decrement = (data, datapatch, datafix) => {
+    return {
+        type: 'DECREMENT',
+        payload: data,
+        datapatch,
+        datafix
+    }
+}
+
+export const Count = (data, datapatch, datafix) => {
+    return {
+        type: 'COUNT',
+        payload: data,
+        datapatch,
+        datafix
     }
 }

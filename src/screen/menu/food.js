@@ -1,96 +1,68 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Image, TouchableOpacity, StyleSheet, ToastAndroid} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ActivityIndicator, Card} from 'react-native-paper';
-
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ToastAndroid,
+  ActivityIndicator
+} from 'react-native';
 import {connect} from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-import {getMenuFood} from '../../redux/_actions/menus';
-import {addOrder, editOrder} from '../../redux/_actions/orders';
-import env from '../../env/env';
-import axios from 'axios';
+import { Card} from 'react-native-paper';
+import {updateFood, getFood} from '../../redux/_actions/menus';
+import { addToCart, Increment, Decrement } from '../../redux/_actions/orders'
+
 
 class food extends Component {
-  state = {
-    tableNumber: 0,
-    transactionId: 0,
-    startedMenus: [],
-    toogleStarted: '',
-  };
-  gettableNumber = async () => {
-    try {
-      const tableNumber = await AsyncStorage.getItem('tableNumber');
-      const transactionId = await AsyncStorage.getItem('transactionId');
-      console.log(transactionId);
-      await this.setState({
-        tableNumber: tableNumber,
-        transactionId: transactionId,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  addMenuToOrder = async (menuId, transactionId) => {
-    let transactionData;
-    let menuData;
-    try {
-      transactionData = await axios.get(
-        env.host + 'transaction/' + `${transactionId}`,
-      );
-      menuData = await axios.get(env.host + 'menu/' + `${menuId}`);
-      // console.log(`Menu Data : ${JSON.stringify(transactionData)}`)
-    } catch (e) {
-      console.log(e);
-    }
-    if (!transactionData.data.isPaid) {
-      const totalMenuDataByTrans = await axios.get(
-        env.host +
-          'order/transactionId/' +
-          `${transactionId}` +
-          '/menuId/' +
-          `${menuId}`,
-      );
-      console.log(totalMenuDataByTrans);
-      if (!totalMenuDataByTrans.data) {
-        const item = {
-          menuId,
-          transactionId,
-          price: menuData.data.price,
-          qty: 1,
-        };
-        ToastAndroid.show('Success add order', ToastAndroid.SHORT);
-        this.props.dispatch(addOrder(item));
-      } else {
-        if (totalMenuDataByTrans.data.status == null) {
-          let orderId = totalMenuDataByTrans.data.id;
-          let totaldata = totalMenuDataByTrans.data.qty;
-          totaldata = totaldata + 1;
-          const item = {
-            qty: totaldata,
-          };
-          ToastAndroid.show(
-            `Success add order, Total : ${totaldata}`,
-            ToastAndroid.SHORT,
-          );
-          this.props.dispatch(editOrder(orderId, item));
-        } else {
-          //Data sudah di confirm
-          ToastAndroid.show(
-            `Data sudah terkonfirmasi , Silakan Tunggu Pesanan Anda`,
-            ToastAndroid.SHORT,
-          );
-        }
-      }
-    } else {
-      alert('Sudah Bayar');
-    }
-  };
-  componentDidMount() {
-    this.gettableNumber();
-    this.props.dispatch(getMenuFood());
+  constructor() {
+    super();
+    this.state = {
+      dataOrder: [],
+      menu: {
+        qty: 0,
+      },
+    };
   }
 
+  addToCart = async (item, transactionId) => {
+    let data = this.props.orders.cart.findIndex(x => x.id == item.id);
+    if (data >= 0) {
+    } else {
+      await this.props.dispatch(
+        updateFood(item, this.props.menus.food, this.props.menus.food),
+      );
+      await this.props.dispatch(
+        addToCart(item, this.props.transaction.data.id),
+      );
+    }
+  };
+
+  async componentDidMount() {
+    const table = await AsyncStorage.getItem('tableNumber');
+    this.setState({
+      table,
+    });
+  }
+
+  dec = () => {
+    if (this.state.qty == 0) {
+      this.props.dispatch(UpdateCart(item, this.props.transaction.data.id));
+    } else {
+      this.setState({
+        menu: {
+          qty: this.state.qty - 1,
+        },
+      });
+    }
+  };
+
+  componentDidMount() {
+    this.props.dispatch(getFood());
+  }
   loading = () => {
     return (
       <View
@@ -105,15 +77,17 @@ class food extends Component {
   };
   renderItem = ({item}) => {
     const price = item.price;
-    let number_string = price.toString(),
+    var number_string = price.toString(),
       sisa = number_string.length % 3,
       rupiah = number_string.substr(0, sisa),
-      ribuan = number_string.substr(sisa).match(/\d(3)/g);
+      ribuan = number_string.substr(sisa).match(/\d{3}/g);
 
     if (ribuan) {
       separator = sisa ? '.' : '';
       rupiah += separator + ribuan.join('.');
     }
+
+    // console.log(this.props.menus.Food)
     return (
       <View style={{flex: 1}}>
         <Card style={styles.container}>
@@ -134,7 +108,9 @@ class food extends Component {
                     justifyContent: 'space-between',
                   }}>
                   <View style={{marginRight: 15, marginTop: 15}}>
-                    <Text style={{fontWeight: 'bold', fontSize:16}}>{item.name}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                      {item.name}
+                    </Text>
                     <View
                       style={{
                         marginTop: 15,
@@ -144,21 +120,35 @@ class food extends Component {
                       <Text style={{fontSize: 16}}>Rp. {rupiah}</Text>
                     </View>
                   </View>
-                  <View style={{marginTop: 20, marginLeft:10}}>
-                    <View>
-                      <TouchableOpacity
-                        onPress={() =>
-                          // console.log(JSON.stringify(item))
-                          this.addMenuToOrder(item.id, this.state.transactionId)
-                        }>
-                        <MaterialIcons
-                          name="add-shopping-cart"
-                          size={40}
-                          color={'#e37171'}
-                        />
-                      </TouchableOpacity>
+                    {
+                      item.selected == false && 
+                  <View style={{marginTop: 20, marginLeft: 10}}>
+                      {/* <View> */}
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.addToCart(item, this.props.transaction.data)}>
+                          <MaterialIcons
+                            name="add-shopping-cart"
+                            size={40}
+                            color={'#e37171'}/>
+                        </TouchableOpacity>
+                      {/* </View> */}
                     </View>
-                  </View>
+                    }
+                    {
+                      item.selected == true && 
+                     <View style={{marginTop: 20, marginLeft: 10}}>
+                      {/* <View> */}
+                          {/* <Text> */}
+                          <MaterialIcons
+                            name="add-shopping-cart"
+                            size={40}
+                            color={'#e37171'}
+                            />
+                            {/* </Text> */}
+                      {/* </View> */}
+                     </View>
+                    }
                 </View>
               </View>
             </View>
@@ -167,21 +157,26 @@ class food extends Component {
       </View>
     );
   };
+
   render() {
     const extractKey = ({id}) => id.toString();
     return (
-      <View>
+      <View style={{flex:1}}>
         <View>
           {this.props.menus.isLoading == true && this.loading()}
-          {this.props.menus.isLoading == false && (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={this.props.menus.dataFood}
-              keyExtractor={extractKey}
-              renderItem={this.renderItem}
-            />
-            
-          )}
+          {this.props.menus.isLoading == false && 
+            <View>
+              <FlatList
+                snapToInterval={270}
+                decelerationRate="normal"
+                showsVerticalScrollIndicator={false}
+                data={this.props.menus.food}
+                keyExtractor={extractKey}
+                extraData={this.props.menus.food}
+                renderItem={this.renderItem}
+              />
+            </View>
+          }
         </View>
       </View>
     );
@@ -191,7 +186,7 @@ class food extends Component {
 const mapStateToProps = state => {
   return {
     menus: state.menus,
-    transactions: state.transactions,
+    transaction: state.transaction,
     orders: state.orders,
   };
 };
@@ -203,13 +198,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 4,
     },
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
-    elevation: 9
+    elevation: 9,
   },
   header: {
-    backgroundColor: "#1BAA56"
-  }
+    backgroundColor: '#1BAA56',
+  },
 });

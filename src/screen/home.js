@@ -31,6 +31,9 @@ class home extends Component {
     if (this.state.table == null) {
       return false;
     } else {
+      await this.setState({
+        isPress: true,
+      });
       await AsyncStorage.setItem('tableNumber', this.state.table);
       await this.props.dispatch(
         addTransaction({
@@ -38,9 +41,6 @@ class home extends Component {
           isPaid: 0,
         }),
       );
-      await this.setState({
-        isPress: true,
-      });
       await AsyncStorage.setItem(
         'transactionId',
         `${this.props.transaction.data.id}`,

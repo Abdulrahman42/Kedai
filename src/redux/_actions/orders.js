@@ -23,6 +23,12 @@ export const getCart = (transactionId) => {
     return {
         type: 'GET_CART',
         payload: axios.get(env.host + 'order/transaction' + transactionId)
+        // payload: axios({
+        //     url: env.host + 'order/transaction' + transactionId,
+        //     method: 'get',
+        //     responseType: 'json'
+    
+        // })
     }
 }
 

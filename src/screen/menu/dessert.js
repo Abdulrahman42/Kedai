@@ -6,16 +6,16 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Card} from 'react-native-paper';
-import { getDessert, updateDessert} from '../../redux/_actions/menus';
-import { addToCart, Increment, Decrement } from '../../redux/_actions/orders'
-
+import {Card} from 'react-native-paper';
+import {getDessert, updateDessert} from '../../redux/_actions/menus';
+import {addToCart, Increment, Decrement} from '../../redux/_actions/orders';
+import {toRupiah} from '../../function';
 
 class dessert extends Component {
   constructor() {
@@ -74,17 +74,6 @@ class dessert extends Component {
     );
   };
   renderItem = ({item}) => {
-    const price = item.price;
-    var number_string = price.toString(),
-      sisa = number_string.length % 3,
-      rupiah = number_string.substr(0, sisa),
-      ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-    if (ribuan) {
-      separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
-
     // console.log(this.props.menus.dessert)
     return (
       <View style={{flex: 1}}>
@@ -115,30 +104,30 @@ class dessert extends Component {
                         flex: 1,
                         justifyContent: 'flex-end',
                       }}>
-                      <Text style={{fontSize: 16}}>Rp. {rupiah}</Text>
+                      <Text style={{fontSize: 16}}>{toRupiah(item.price)}</Text>
                     </View>
                   </View>
-                    {
-                      item.selected == false && 
-                  <View style={{marginTop: 20, marginLeft: 10}}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.addToCart(item, this.props.transaction.data)}>
-                          <MaterialIcons
-                            name="add-shopping-cart"
-                            size={40}
-                            color={'#e37171'}/>
-                        </TouchableOpacity>
+                  {item.selected == false && (
+                    <View style={{marginTop: 20, marginLeft: 10}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.addToCart(item, this.props.transaction.data)
+                        }>
+                        <MaterialIcons
+                          name="add-shopping-cart"
+                          size={40}
+                          color={'#e37171'}
+                        />
+                      </TouchableOpacity>
                     </View>
-                    }
-                    {
-                      item.selected == true && 
-                      <View style={{marginTop: 20, marginLeft: 10}}>
+                  )}
+                  {item.selected == true && (
+                    <View style={{marginTop: 20, marginLeft: 10}}>
                       <View>
                         <Icon name="checkcircle" color="#d0d0d0" size={25} />
                       </View>
                     </View>
-                    }
+                  )}
                 </View>
               </View>
             </View>
@@ -151,22 +140,20 @@ class dessert extends Component {
   render() {
     const extractKey = ({id}) => id.toString();
     return (
-      <View style={{flex:1}}>
+      <View style={{flex: 1}}>
         <View>
           {this.props.menus.isLoading == true && this.loading()}
-          {this.props.menus.isLoading == false && 
-            // <View>
-              <FlatList
-                snapToInterval={270}
-                decelerationRate="normal"
-                showsVerticalScrollIndicator={false}
-                data={this.props.menus.dessert}
-                keyExtractor={extractKey}
-                extraData={this.props.menus.dessert}
-                renderItem={this.renderItem}
-              />
-            // </View>
-          }
+          {this.props.menus.isLoading == false && (
+            <FlatList
+              snapToInterval={270}
+              decelerationRate="normal"
+              showsVerticalScrollIndicator={false}
+              data={this.props.menus.dessert}
+              keyExtractor={extractKey}
+              extraData={this.props.menus.dessert}
+              renderItem={this.renderItem}
+            />
+          )}
         </View>
       </View>
     );

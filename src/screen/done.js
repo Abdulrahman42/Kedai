@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import {RESET} from '../redux/_actions/orders';
 import {connect} from 'react-redux';
-import {} from '../redux/_actions/timer'
+import { dateTime } from '../function'
 
 class done extends Component {
   constructor() {
@@ -24,11 +24,6 @@ class done extends Component {
       table,
     });
   }
-  dateTime = (time) => {
-    let Menit = Math.floor(time / 60);
-    let Detik = time % 60;
-    return Menit + ":" + Detik;
-}
 
   render() {
     return (
@@ -45,8 +40,8 @@ class done extends Component {
           <Text style={{fontSize: 50, textAlign: 'center', color: '#d0d0d0'}}>
             #{this.state.table}
           </Text>
-          <Text style={{textAlign: 'center', color: '#d0d0d0'}}>THANK YOU</Text>
-          <Text style={{textAlign: 'center', color: '#d0d0d0'}}>Time Spend : {this.dateTime(this.state.timer)}</Text>
+          <Text style={styles.textSmall}>THANK YOU</Text>
+          <Text style={styles.textSmall}>Time Spend : {dateTime(this.props.timer.count)}</Text>
         </View>
         <View style={{marginTop: 50, alignItems: 'center'}}>
           <Image
@@ -60,7 +55,7 @@ class done extends Component {
             }}
           />
         </View>
-        <View style={{alignItems: 'center',alignSelf:'center', marginVertical: 10}}>
+        <View style={styles.backHome}>
           <TouchableOpacity
             style={{width: '50%'}}
             mode="Outlined"
@@ -90,4 +85,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
   },
+  textSmall: {
+    textAlign: 'center',
+     color: '#d0d0d0'
+  },
+  backHome:{
+    alignItems: 'center',
+    alignSelf:'center',
+     marginVertical: 10
+  }
 });

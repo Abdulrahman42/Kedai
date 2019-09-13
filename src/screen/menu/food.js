@@ -17,8 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Card} from 'react-native-paper';
 import {updateFood, getFood} from '../../redux/_actions/menus';
 import {addToCart, Increment, Decrement} from '../../redux/_actions/orders';
-
-// import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {toRupiah} from '../../function';
 
 class food extends Component {
   constructor() {
@@ -77,81 +76,68 @@ class food extends Component {
     );
   };
   renderItem = ({item}) => {
-    const price = item.price;
-    var number_string = price.toString(),
-      sisa = number_string.length % 3,
-      rupiah = number_string.substr(0, sisa),
-      ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-    if (ribuan) {
-      separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
-
     // console.log(this.props.menus.Food)
     return (
       <SafeAreaView style={{flex: 1}}>
-        {/* <SkeletonPlaceholder backgroundColor='#d0d0d0'> */}
-          <Card style={styles.container}>
-            <Card.Content style={{paddingHorizontal: 0, paddingVertical: 0}}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{borderColor:'#e37171'}}>
-                  <Image
-                    source={{
-                      uri: item.image,
-                    }}
-                    style={{width: 100, height: 120, justifyContent: 'center'}}
-                  />
-                </View>
-                <View style={{flex: 1, marginHorizontal: 5}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{marginRight: 15, marginTop: 15}}>
-                      <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                        {item.name}
-                      </Text>
-                      <View
-                        style={{
-                          paddingVertical: 15,
-                          flex: 1,
-                          justifyContent: 'flex-end',
-                        }}>
-                        <Text style={{fontSize: 16}}>Rp. {rupiah}</Text>
+        <Card style={styles.container}>
+          <Card.Content style={{paddingHorizontal: 0, paddingVertical: 0}}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{borderColor: '#e37171'}}>
+                <Image
+                  source={{
+                    uri: item.image,
+                  }}
+                  style={{width: 100, height: 120, justifyContent: 'center'}}
+                />
+              </View>
+              <View style={{flex: 1, marginHorizontal: 5}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{marginRight: 15, marginTop: 15}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                      {item.name}
+                    </Text>
+                    <View
+                      style={{
+                        paddingVertical: 15,
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                      }}>
+                      <Text style={{fontSize: 16}}>{toRupiah(item.price)}</Text>
+                    </View>
+                  </View>
+
+                  {item.selected == false && (
+                    <View style={{marginTop: 20, marginLeft: 10}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.addToCart(item, this.props.transaction.data.id)
+                        }>
+                        <View>
+                          <MaterialIcons
+                            name="add-shopping-cart"
+                            size={40}
+                            color={'#e37171'}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {item.selected == true && (
+                    <View style={{marginTop: 20, marginLeft: 10}}>
+                      <View>
+                        <Icon name="checkcircle" color="#d0d0d0" size={25} />
                       </View>
                     </View>
-
-                    {item.selected == false && (
-                      <View style={{marginTop: 20, marginLeft: 10}}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.addToCart(item, this.props.transaction.data)
-                          }>
-                          <View>
-                            <MaterialIcons
-                              name="add-shopping-cart"
-                              size={40}
-                              color={'#e37171'}
-                            />
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    {item.selected == true && (
-                      <View style={{marginTop: 20, marginLeft: 10}}>
-                        <View>
-                          <Icon name="checkcircle" color="#d0d0d0" size={25} />
-                        </View>
-                      </View>
-                    )}
-                  </View>
+                  )}
                 </View>
               </View>
-            </Card.Content>
-          </Card>
-        {/* </SkeletonPlaceholder> */}
+            </View>
+          </Card.Content>
+        </Card>
       </SafeAreaView>
     );
   };
@@ -163,17 +149,15 @@ class food extends Component {
         <View>
           {this.props.menus.isLoading == true && this.loading()}
           {this.props.menus.isLoading == false && (
-            // <View>
-              <FlatList
-                snapToInterval={270}
-                decelerationRate="normal"
-                showsVerticalScrollIndicator={false}
-                data={this.props.menus.food}
-                keyExtractor={extractKey}
-                extraData={this.props.menus.food}
-                renderItem={this.renderItem}
-              />
-            // </View>
+            <FlatList
+              snapToInterval={270}
+              decelerationRate="normal"
+              showsVerticalScrollIndicator={false}
+              data={this.props.menus.food}
+              keyExtractor={extractKey}
+              extraData={this.props.menus.food}
+              renderItem={this.renderItem}
+            />
           )}
         </View>
       </View>

@@ -12,15 +12,13 @@ import {connect} from 'react-redux';
 import AppIndex from '../../navigation/tabnavigation';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {timerOn, setTimer} from '../../redux/_actions/timer';
-import Icons from 'react-native-vector-icons/AntDesign';
+import { dateTime } from '../../function'
 
 class index extends Component {
   constructor() {
     super();
     this.state = {
       table: '',
-      // second: 0,
-      // minute: 0,
       isi: false,
       time: 0,
     };
@@ -31,11 +29,6 @@ class index extends Component {
     });
     await this.props.dispatch(timerOn(this.state.time));
   };
-  dateTime = time => {
-    let Menit = Math.floor(time / 60);
-    let Detik = time % 60;
-    return Menit + ':' + Detik;
-  };
 
   async componentDidMount() {
     const table = await AsyncStorage.getItem('tableNumber');
@@ -44,27 +37,7 @@ class index extends Component {
     });
     this.set = setInterval(this.timer, 1000);
     await this.props.dispatch(setTimer(this.set));
-    // this.interval = setInterval(
-    //   () => this.setState(prevState => ({second: prevState.second + 1})),
-    //   1000,
-    // );
-
-    // this.interval = setInterval(
-    //   () =>
-    //     this.setState(prevState => ({minute: prevState.minute + 1, second: 0})),
-    //   59000,
-    // );
   }
-
-  // componentDidUpdate() {
-  //   if (this.state.second === 60) {
-  //     // clearInterval(this.interval);
-  //   }
-  // }
-
-  // async componentWillUnmount() {
-  //   await clearInterval(this.interval);
-  // }
   loading = () => {
     return (
       <View
@@ -93,18 +66,14 @@ class index extends Component {
             <Icon name="clock" size={14} />
             &nbsp;
             {/* {this.state.minute}m:{this.state.second}s */}
-            {this.dateTime(this.state.time)}
+            {dateTime(this.state.time)}
           </Text>
         </View>
 
         <AppIndex />
         {this.props.orders.cart == 0 ? (
           <View
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 5,
-              paddingHorizontal: 5,
-            }}>
+            style={styles.footer}>
             <View style={{width: '100%', marginBottom: 5}}>
               <Button style={{backgroundColor: '#d0d0d0'}} mode="contained">
                 List Order
@@ -113,11 +82,7 @@ class index extends Component {
           </View>
         ) : (
           <View
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 5,
-              paddingHorizontal: 5,
-            }}>
+            style={styles.footer}>
             <View style={{width: '100%', marginBottom: 5}}>
               <Button
                 style={{backgroundColor: '#e37171'}}
@@ -156,4 +121,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 5,
   },
+  footer:{
+    flexDirection: 'row',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+  }
 });

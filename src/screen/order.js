@@ -23,8 +23,8 @@ import {
 } from '../redux/_actions/orders';
 
 import Icons from 'react-native-vector-icons/FontAwesome5';
-import { timerOn } from '../redux/_actions/timer'
 import Icon from 'react-native-vector-icons/AntDesign';
+import {toRupiah, dateTime} from '../function';
 import {FALSE, FALSE_DRINK, FALSE_DESSERT} from '../redux/_actions/menus';
 class order extends Component {
   constructor() {
@@ -32,12 +32,10 @@ class order extends Component {
     this.state = {
       table: '',
       total: 0,
-      // second: 0,
-      // minute: 0,
-      time:0,
+      time: 0,
       onConfirm: false,
       pressConf: true,
-      transactionId: 0
+      transactionId: 0,
     };
   }
   _count = () => {
@@ -55,16 +53,11 @@ class order extends Component {
     const id = await AsyncStorage.getItem('transactionId');
     this.setState({
       table,
-      transactionId: id
+      transactionId: id,
     });
     await this._count();
-    // await this.props.dispatch(timerOn(this.props.timer.count))
-
   }
-  // componentDidUpdate() {
-  //   if (this.state.second === 60) {
-  //   }
-  // }
+
   inc = async item => {
     await this.props.dispatch(
       Increment(item, this.props.orders.cart, this.props.orders.cart),
@@ -78,15 +71,16 @@ class order extends Component {
         DELETE(item, this.props.orders.cart, this.props.orders.cart),
       );
       await this._count();
-      if (item.categoryId == 4) {
+      await (item, this.props.orders.cart && this.props.navigation.goBack());
+      if (item.categoryId == 1) {
         await this.props.dispatch(
           FALSE(item, this.props.menus.food, this.props.menus.food),
         );
-      } else if (item.categoryId == 3) {
+      } else if (item.categoryId == 2) {
         await this.props.dispatch(
           FALSE_DRINK(item, this.props.menus.drink, this.props.menus.drink),
         );
-      } else if (item.categoryId == 2) {
+      } else if (item.categoryId == 3) {
         await this.props.dispatch(
           FALSE_DESSERT(
             item,
@@ -99,7 +93,9 @@ class order extends Component {
       await this.props.dispatch(
         Decrement(item, this.props.orders.cart, this.props.orders.cart),
       );
-      await this.props.dispatch(FALSE(item, this.props.menus.data, this.props.menus.data))
+      await this.props.dispatch(
+        FALSE(item, this.props.menus.data, this.props.menus.data),
+      );
       await this._count();
     }
   };
@@ -127,10 +123,7 @@ class order extends Component {
       onConfirm: true,
       pressConf: false,
     });
-    
-    // this.props.dispatch(RESET(this.props.orders.cart));
   };
-
 
   onConf = item => {
     Alert.alert('Are You Sure To This Order', 'Please Check Again', [
@@ -146,29 +139,7 @@ class order extends Component {
       },
     ]);
   };
-  dateTime = (time) => {
-    let Menit = Math.floor(time / 60);
-    let Detik = time % 60;
-    return Menit + ":" + Detik;
-}
 
-  toRupiah = number => {
-    let rupiah = '';
-    let revNumber = number
-      .toString()
-      .split('')
-      .reverse()
-      .join('');
-    for (var i = 0; i < revNumber.length; i++)
-      if (i % 3 == 0) rupiah += revNumber.substr(i, 3) + '.';
-    return (
-      'Rp. ' +
-      rupiah
-        .split('', rupiah.length - 1)
-        .reverse()
-        .join('')
-    );
-  };
   renderItem = ({item}) => {
     return (
       <View style={{flex: 1}}>
@@ -184,13 +155,12 @@ class order extends Component {
                 />
               </View>
               <View>
-                <Text
-                  style={{fontSize: 15, fontWeight: 'bold'}}>
+                <Text style={{fontSize: 15, fontWeight: 'bold'}}>
                   {item.name}
                 </Text>
                 <Text
                   style={{fontSize: 24, color: 'black', fontWeight: 'bold'}}>
-                  {this.toRupiah(item.price * item.qty)}
+                  {toRupiah(item.price * item.qty)}
                 </Text>
               </View>
 
@@ -215,9 +185,8 @@ class order extends Component {
               )}
 
               {this.state.pressConf == false && (
-                <View style={{marginLeft:15}}>
-
-                <Icon name="checkcircle" color="#e37171" size={23} />
+                <View style={{marginLeft: 15}}>
+                  <Icon name="checkcircle" color="#e37171" size={23} />
                 </View>
               )}
             </View>
@@ -230,20 +199,17 @@ class order extends Component {
   render() {
     // const extractKey = ({ id })
     const extractKey = ({menuId}) => menuId.toString();
-    let tId = `${this.props.transaction.data.id}`;
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#e37171" barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={{color: '#d0d0d0', fontWeight: 'bold', marginRight: 10}}>
+          <Text style={{color: '#e37171', fontWeight: 'bold', marginRight: 10}}>
             <Icon name="table" size={14} /> No: {this.state.table}
           </Text>
-          <Text style={{color: '#d0d0d0'}}>
+          <Text style={{color: '#e37171'}}>
             {' '}
             <Icons name="clock" size={14} />
-            &nbsp;
-            {/* {this.state.minute}m:{this.state.second}s */}
-            {this.dateTime(this.state.timer)}
+            {dateTime(this.props.timer.count)}
           </Text>
         </View>
         <Text
@@ -254,7 +220,7 @@ class order extends Component {
             textAlign: 'right',
             paddingRight: 30,
           }}>
-          {this.toRupiah(this.state.total)}
+          {toRupiah(this.state.total)}
         </Text>
         <FlatList
           snapToInterval={270}
@@ -274,65 +240,28 @@ class order extends Component {
             marginBottom: 10,
           }}>
           {this.props.orders.cart.length >= 1 && (
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#e37171',
-                height: 43,
-                width: '65%',
-                elevation: 3,
-                justifyContent: 'space-evenly',
-                marginLeft: 5,
-                alignItems: 'center',
-                alignContent: 'center',
-                flexDirection: 'row',
-                marginRight: 10,
-              }}
-              onPress={this.onConf}>
+            <TouchableOpacity style={styles.confirm} onPress={this.onConf}>
               <View>
-                <Text style={{fontWeight: 'bold', fontSize: 14}}>Confirm</Text>
+                <Text
+                  style={{fontWeight: 'bold', fontSize: 14, color: '#d0d0d0'}}>
+                  Confirm
+                </Text>
               </View>
             </TouchableOpacity>
           )}
           {this.props.orders.cart.length == 0 && (
-            <View
-              style={{
-                borderWidth: 2,
-                borderColor: '#d0d0d0',
-                backgroundColor: '#e37171',
-                height: 43,
-                width: '65%',
-                elevation: 3,
-                marginLeft: 5,
-                justifyContent: 'space-evenly',
-                borderTopRightRadius: 10,
-                borderBottomRightRadius: 10,
-                alignItems: 'center',
-                alignContent: 'center',
-                flexDirection: 'row',
-                marginRight: 10,
-              }}>
+            <View style={styles.confirm}>
               <Text
-                style={{ fontWeight: 'bold', fontSize: 14}}>
+                style={{fontWeight: 'bold', fontSize: 14, color: '#d0d0d0'}}>
                 Confirmed
               </Text>
             </View>
           )}
 
           {this.state.onConfirm == false && (
-            <View
-              style={{
-                height: 30,
-                width: '30%',
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: 'lightgrey',
-                // backgroundColor: 'white',
-                elevation: 3,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View style={styles.bill}>
               <Text
-                style={{color: '#d0d0d0', fontWeight: 'bold', fontSize: 15}}>
+                style={{color: '#e37171', fontWeight: 'bold', fontSize: 15}}>
                 <Icon name="calculator" size={14} />
                 Bill
               </Text>
@@ -348,8 +277,8 @@ class order extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() =>  this.props.navigation.navigate('bill')}>
-              <View style={{color: '#114357'}}>
+              onPress={() => this.props.navigation.navigate('bill')}>
+              <View style={{color: '#e37171'}}>
                 <Text style={{fontWeight: 'bold', fontSize: 20}}>
                   <Icon name="calculator" size={14} />
                   Bill
@@ -368,7 +297,7 @@ const mapStateToProps = state => {
     orders: state.orders,
     transaction: state.transaction,
     menus: state.menus,
-    timer: state.timer
+    timer: state.timer,
   };
 };
 
@@ -386,7 +315,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // marginHorizontal: 1,
     marginVertical: 10,
     shadowOffset: {
       width: 0,
@@ -399,19 +327,6 @@ const styles = StyleSheet.create({
   FlatList: {
     flex: 1,
   },
-  headerbill: {
-    marginTop: 20,
-    backgroundColor: '#00a663',
-    height: 120,
-    elevation: 3,
-    borderRadius: 10,
-    width: '70%',
-    padding: 20,
-    justifyContent: 'space-evenly',
-    alignContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
   header: {
     flexDirection: 'row',
     marginBottom: 30,
@@ -421,36 +336,47 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  textContent: {
-    marginLeft: 20,
-    fontSize: 15,
-    color: 'black',
-    width: '70%',
-  },
-  textHeader: {
-    fontSize: 23,
-    color: 'black',
-    fontWeight: 'bold',
-  },
   footer: {
     flexDirection: 'row',
   },
-  search: {
-    flexDirection: 'row',
-    alignContent: 'center',
+  bill: {
+    height: 30,
+    width: '30%',
+    borderRadius: 10,
+    borderWidth: 2,
+    elevation: 3,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#eeeeee',
-    height: 50,
-    width: '80%',
-    borderRadius: 30,
-    paddingLeft: 20,
   },
-  bottom: {
-    height: '10%',
-    width: '80%',
-    backgroundColor: 'black',
-    borderRadius: 30,
+  confirm: {
+    backgroundColor: '#e37171',
+    height: 43,
+    width: '65%',
+    elevation: 3,
+    justifyContent: 'space-evenly',
+    marginLeft: 5,
+    alignItems: 'center',
+    alignContent: 'center',
+    flexDirection: 'row',
+    marginRight: 10,
   },
+  confirmed: {
+    borderWidth: 2,
+    borderColor: '#d0d0d0',
+    backgroundColor: '#e37171',
+    height: 43,
+    width: '65%',
+    elevation: 3,
+    marginLeft: 5,
+    justifyContent: 'space-evenly',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    alignItems: 'center',
+    alignContent: 'center',
+    flexDirection: 'row',
+    marginRight: 10,
+  },
+
   qty: {
     flex: 1,
     height: 30,

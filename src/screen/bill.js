@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
 import {Text, Button} from 'react-native-paper';
-import {StyleSheet, StatusBar, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 
-import Icon from 'react-native-vector-icons/AntDesign';
+import {toRupiah,dateTime} from '../function';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {RESET} from '../redux/_actions/orders';
-import {updateTransaction} from '../redux/_actions/transaction';
+import {pushTransaction} from '../redux/_actions/transaction';
 
-// import {updateOrder, postOrder} from '../_redux/actions/orders'
+
 class bill extends React.Component {
   constructor() {
     super();
     this.state = {
+      time: 0,
       table: '',
-      // total: '',
       transactionData: {
         subTotal: 0,
         discount: 0,
@@ -22,28 +22,16 @@ class bill extends React.Component {
         tax: 0,
         total: 0,
         date: '',
-        isPaid:1
+        isPaid: 1,
       },
     };
   }
 
-  // _count = () => {
-  //     totalku = 0
-  //     this.props.orders.cart.map((item) => {
-  //         let data = item.price * item.qty
-  //         totalku = data + totalku
-  //     })
-  //     this.setState({
-  //         total: totalku
-  //     })
-  //     console.log(totalku)
-  // }
   transactionHandler = () => {
     let data = this.state.transactionData;
     let total = 0;
     this.props.orders.cart.map(item => {
-      total = item.price * item.qty;
-      // total = data + totalku
+      total = total + item.price * item.qty;
     });
     let newServiceCharge = total * 0.05;
     let newDiscount = total * 0.03;
@@ -70,27 +58,21 @@ class bill extends React.Component {
       serviceCharge: trans.serviceCharge,
       tax: trans.tax,
       total: trans.total,
-      isPaid: trans.isPaid
+      isPaid: trans.isPaid,
+      finishedTime: dateTime(0 + this.props.timer.count),
     };
     this.setState({
       table,
     });
-    await this.props.dispatch(updateTransaction(data, id));
+    await this.props.dispatch(pushTransaction(data, id));
     await this.props.dispatch(RESET(this.props.orders.cart));
-    // await this.props.dispatch(getCart(this.props.transaction.id));
-    // await this._count();
-    await clearInterval(this.props.timer.setTimer)
+    await clearInterval(this.props.timer.setTimer);
     await this.props.navigation.navigate('done');
   };
 
   componentDidMount() {
     this.transactionHandler();
-    // await this.props.dispatch(getTransactions(trxId, table))
-        // await this.props.dispatch(getCart(trxId))
     const that = this;
-    // const date = new Date().getDate();
-    // const month = new Date().getMonth() + 1;
-    // const year = new Date().getFullYear();
     let today = new Date();
     date =
       today.getDate() +
@@ -99,27 +81,9 @@ class bill extends React.Component {
       '/' +
       today.getFullYear();
     that.setState({
-      // date: date + ' ' + parseInt(month) + ' ' + year
       date,
     });
   }
-  toRupiah = number => {
-    let rupiah = '';
-    let revNumber = number
-      .toString()
-      .split('')
-      .reverse()
-      .join('');
-    for (var i = 0; i < revNumber.length; i++)
-      if (i % 3 == 0) rupiah += revNumber.substr(i, 3) + '.';
-    return (
-      'Rp. ' +
-      rupiah
-        .split('', rupiah.length - 1)
-        .reverse()
-        .join('')
-    );
-  };
   renderItem = ({item}) => {
     return (
       <View style={styles.body}>
@@ -128,7 +92,7 @@ class bill extends React.Component {
             {item.name}
           </Text>
           <Text style={{fontSize: 24, color: 'black', fontWeight: 'bold'}}>
-            {this.toRupiah(item.price * item.qty)}
+            {toRupiah(item.price * item.qty)}
           </Text>
         </View>
       </View>
@@ -142,7 +106,6 @@ class bill extends React.Component {
       <View style={{flex: 1}}>
         <View style={styles.container}>
           <Text style={{fontSize: 18, fontWeight: 'bold', textAlign: 'center'}}>
-            {/* 03 September 2019: 14:11{'\n'} */}
             {this.state.date}
           </Text>
           <View
@@ -214,12 +177,10 @@ class bill extends React.Component {
                 </Text>
               </View>
               <View style={{flex: 1}}>
-                <Text style={styles.bill}>{this.toRupiah(data.subTotal)}</Text>
-                <Text style={styles.bill}>- {this.toRupiah(data.discount)}</Text>
-                <Text style={styles.bill}>
-                  {this.toRupiah(data.serviceCharge)}
-                </Text>
-                <Text style={styles.bill}>{this.toRupiah(data.tax)}</Text>
+                <Text style={styles.bill}>{toRupiah(data.subTotal)}</Text>
+                <Text style={styles.bill}>- {toRupiah(data.discount)}</Text>
+                <Text style={styles.bill}>{toRupiah(data.serviceCharge)}</Text>
+                <Text style={styles.bill}>{toRupiah(data.tax)}</Text>
                 <Text
                   style={{
                     textAlign: 'left',
@@ -227,7 +188,7 @@ class bill extends React.Component {
                     marginHorizontal: 15,
                     fontWeight: 'bold',
                   }}>
-                  {this.toRupiah(data.total)}
+                  {toRupiah(data.total)}
                 </Text>
               </View>
             </View>
@@ -267,7 +228,7 @@ const mapStateToProps = state => {
   return {
     transaction: state.transaction,
     orders: state.orders,
-    timer: state.timer
+    timer: state.timer,
   };
 };
 

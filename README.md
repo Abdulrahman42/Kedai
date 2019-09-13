@@ -56,6 +56,7 @@ Follow these step to install
 ```
 $ https://github.com/Abdulrahman42/Kedai.git
 $ cd kedai
+$ use branch redux
 $ npm install
 $ react-native run-ios #for ios
 $ react-native run-android #for android

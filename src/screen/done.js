@@ -1,22 +1,34 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
+import {RESET} from '../redux/_actions/orders';
+import {connect} from 'react-redux';
+import {} from '../redux/_actions/timer'
 
-export default class done extends Component {
+class done extends Component {
   constructor() {
     super();
     this.state = {
       table: '',
     };
   }
+  logout = async () => {
+    await AsyncStorage.clear();
+    await this.props.dispatch(RESET(this.props.orders.cart));
+    await this.props.navigation.navigate('home');
+  };
   async componentDidMount() {
     const table = await AsyncStorage.getItem('tableNumber');
     this.setState({
       table,
     });
   }
+  dateTime = (time) => {
+    let Menit = Math.floor(time / 60);
+    let Detik = time % 60;
+    return Menit + ":" + Detik;
+}
 
   render() {
     return (
@@ -30,10 +42,11 @@ export default class done extends Component {
           </Text>
         </View>
         <View>
-          <Text style={{fontSize: 50, textAlign: 'center', color: 'white'}}>
+          <Text style={{fontSize: 50, textAlign: 'center', color: '#d0d0d0'}}>
             #{this.state.table}
           </Text>
-          <Text style={{textAlign: 'center', color: 'white'}}>THANK YOU</Text>
+          <Text style={{textAlign: 'center', color: '#d0d0d0'}}>THANK YOU</Text>
+          <Text style={{textAlign: 'center', color: '#d0d0d0'}}>Time Spend : {this.dateTime(this.state.timer)}</Text>
         </View>
         <View style={{marginTop: 50, alignItems: 'center'}}>
           <Image
@@ -47,13 +60,29 @@ export default class done extends Component {
             }}
           />
         </View>
-        <View>
-          
+        <View style={{alignItems: 'center',alignSelf:'center', marginVertical: 10}}>
+          <TouchableOpacity
+            style={{width: '50%'}}
+            mode="Outlined"
+            onPress={this.logout}>
+            <Text style={{color: '#d0d0d0'}}>Back To Home</Text>
+          </TouchableOpacity>
         </View>
+        <View></View>
       </LinearGradient>
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    menus: state.menus,
+    transaction: state.transaction,
+    orders: state.orders,
+    timer: state.timer
+  };
+};
+
+export default connect(mapStateToProps)(done);
 
 const styles = StyleSheet.create({
   linearGradient: {

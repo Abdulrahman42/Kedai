@@ -80,7 +80,7 @@ const menus = (state = initialState, action) => {
 
 
 
-        case 'UPDATE_MAKANAN':
+        case 'UPDATE_FOOD':
             let dataCart = action.food.findIndex(x => x.id == action.payload.id)
 
             let datafix = { ...action.food[dataCart], selected: true }
@@ -96,7 +96,7 @@ const menus = (state = initialState, action) => {
             }
 
 
-        case 'UPDATE_MINUMAN':
+        case 'UPDATE_DRINK':
             let dataDrink = action.drink.findIndex(x => x.id == action.payload.id)
             console.log(action.drink[dataDrink])
 
@@ -113,7 +113,7 @@ const menus = (state = initialState, action) => {
             }
 
 
-        case 'UPDATE_CEMILAN':
+        case 'UPDATE_DESSERT':
             let dataDessert = action.dessert.findIndex(x => x.id == action.payload.id)
             console.log(action.dessert[dataDessert])
 

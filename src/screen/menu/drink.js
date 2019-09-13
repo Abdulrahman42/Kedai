@@ -6,10 +6,10 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ToastAndroid,
   ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux';
+import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Card} from 'react-native-paper';
@@ -46,6 +46,7 @@ class drink extends Component {
     this.setState({
       table,
     });
+    this.props.dispatch(getDrink());
   }
 
   dec = () => {
@@ -60,9 +61,7 @@ class drink extends Component {
     }
   };
 
-  componentDidMount() {
-    this.props.dispatch(getDrink());
-  }
+ 
   loading = () => {
     return (
       <View
@@ -87,7 +86,7 @@ class drink extends Component {
       rupiah += separator + ribuan.join('.');
     }
 
-    console.log(this.props.menus.Food)
+    // console.log(this.props.menus.drink)
     return (
       <View style={{flex: 1}}>
         <Card style={styles.container}>
@@ -123,31 +122,25 @@ class drink extends Component {
                     {
                       item.selected == false && 
                   <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
+                
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToCart(console.log(this.props.transaction.id) )}>
+                            this.addToCart(item,this.props.transaction.id) }>
                           <MaterialIcons
                             name="add-shopping-cart"
                             size={40}
                             color={'#e37171'}/>
                         </TouchableOpacity>
-                      {/* </View> */}
+                      
                     </View>
                     }
                     {
                       item.selected == true && 
-                     <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
-                          {/* <Text> */}
-                          <MaterialIcons
-                            name="add-shopping-cart"
-                            size={40}
-                            color={'#e37171'}
-                            />
-                            {/* </Text> */}
-                      {/* </View> */}
-                     </View>
+                      <View style={{marginTop: 20, marginLeft: 10}}>
+                      <View>
+                        <Icon name="checkcircle" color="#d0d0d0" size={25} />
+                      </View>
+                    </View>
                     }
                 </View>
               </View>
@@ -165,7 +158,7 @@ class drink extends Component {
         <View>
           {this.props.menus.isLoading == true && this.loading()}
           {this.props.menus.isLoading == false && 
-            <View>
+            // <View>
               <FlatList
                 snapToInterval={270}
                 decelerationRate="normal"
@@ -175,7 +168,7 @@ class drink extends Component {
                 extraData={this.props.menus.drink}
                 renderItem={this.renderItem}
               />
-            </View>
+            // </View>
           }
         </View>
       </View>

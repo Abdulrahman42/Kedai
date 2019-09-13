@@ -3,9 +3,9 @@ import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 import home from '../screen/home';
 import index from '../screen/menu/index';
-// import done from '../screen/done'
-// import bill from '../screen/bill'
-// import order from '../screen/order'
+import order from '../screen/order'
+import done from '../screen/done'
+import bill from '../screen/bill'
 
 const stackpublic = createStackNavigator({
   home: {
@@ -19,17 +19,26 @@ const stackpublic = createStackNavigator({
     navigationOptions: {
       header: null,
     },
-    // },
-    // done:{
-    //   screen:done
-    // },
-    // bill:{
-    //   screen: bill
-    // },
-    // order:{
-    //   screen: order
-    // }
   },
+  order: {
+    screen: order,
+    navigationOptions: {
+      header: null
+    }
+  },
+  bill:{
+    screen: bill,
+      navigationOptions:{
+        header: null
+    }
+  },
+  done: {
+    screen: done,
+    navigationOptions:{
+      header: null,
+      gesturesEnabled: false
+    }
+  }
 });
 
 const AppContainer = createAppContainer(stackpublic);

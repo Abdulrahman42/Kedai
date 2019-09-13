@@ -5,14 +5,14 @@ import transaction from './_reducers/transaction'
 import menus from './_reducers/menus'
 import orders from './_reducers/orders'
 import categories from './_reducers/categories'
-import time from './_reducers/time'
+import timer from './_reducers/timer'
 
 const reducers = combineReducers({
     categories,
     menus,
     orders,
     transaction,
-    time
+    timer
 })
 
 const store = createStore(

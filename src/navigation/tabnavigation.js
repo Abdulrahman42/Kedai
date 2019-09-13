@@ -1,95 +1,62 @@
-import {StyleSheet} from 'react-native';
+import React, { Component } from 'react'
 import {
   createMaterialTopTabNavigator,
-  createStackNavigator,
   createAppContainer,
 } from 'react-navigation';
 
-import Allmenu from '../screen/menu/allmenu';
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icons from 'react-native-vector-icons/Entypo'
+
 import Food from '../screen/menu/food';
 import Drink from '../screen/menu/drink';
 import Dessert from '../screen/menu/dessert';
-// import done from '../screen/done';
-// import bill from '../screen/bill';
-// import order from '../screen/order';
-// import index from '../screen/menu/index'
 
-const tabnavigation = createMaterialTopTabNavigator(
-  {
-    // Allmenu: {
-    //   screen: Allmenu,
-    //   navigationOptions: {
-    //     tabBarLabel: 'ALL',
-    //   },
-    // },
-    Food: {
-      screen: Food,
-      navigationOptions: {
-        tabBarLabel: 'Food',
-      },
-    },
-    Dessert: {
-      screen: Dessert,
-      navigationOptions: {
-        tabBarLabel: 'Dessert',
-      },
-    },
-    Drink: {
-      screen: Drink,
-      navigationOptions: {
-        tabBarLabel: 'Drink',
-      },
-    },
-  },
-  {
+
+const tabnavigation = createMaterialTopTabNavigator({
+  Food: {
+    screen: Food,
+    navigationOptions: {
+        tabBarLabel: "Food",
+        tabBarIcon: ({ tintColor }) => (
+            <Icon name="local-dining" size={20} color={tintColor} />
+        )
+    }
+},
+Drink: {
+    screen: Drink,
+    navigationOptions: {
+        tabBarLabel: "Drink",
+        tabBarIcon: ({ tintColor }) => (
+            <Icons name="drink" size={20} color={tintColor} />
+        )
+    }
+},
+Dessert: {
+    screen: Dessert,
+    navigationOptions: {
+        tabBarLabel: "Dessert",
+        tabBarIcon: ({ tintColor }) => (
+            <Icons name="cake" size={20} color={tintColor} />
+        )
+    }
+}
+}, {
     tabBarOptions: {
-      activeTintColor: '#C40C42',
-      inactiveTintColor: 'grey',
-      style: {
-        borderBottomColor: '#C40C42',
-        backgroundColor: '#ffffff',
-        borderTopWidth: 0,
-        shadowOffset: {width: 6, height: 6},
-        shadowColor: 'black',
-        shadowOpacity: 0.5,
-        elevation: 6,
-        paddingTop: 10,
-      },
-    },
-  },
-);
-const stackResto = createStackNavigator(
-  {
-    Main: {
-      screen: tabnavigation,
-    },
-    // order: {
-    //   screen: order,
-    // },
-    // bill: {
-    //   screen: bill,
-    // },
-    // done: {
-    //   screen: done,
-    // },
-    // index:{
-    //     screen: index
-    // }
-  },
-  {
-    headerMode: 'screen',
-    mode: 'modal',
-    headerMode: 'none',
-  },
-);
+        activeTintColor: 'black',
+        inactiveTintColor: 'silver',
+        labelStyle: {
+            fontSize: 10
+        },
+        showLabel: true,
+        style: {
+            backgroundColor: 'white',
+            elevation: 0
+        }, indicatorStyle: {
+            backgroundColor: 'red'
+        },
+        showIcon: true
+    }
+}
+)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-export default stackResto
+export default AppIndex = createAppContainer(tabnavigation)

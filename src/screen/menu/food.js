@@ -6,16 +6,19 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ToastAndroid,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Card} from 'react-native-paper';
-import {updateFood, getFood} from '../../redux/_actions/menus';
-import { addToCart, Increment, Decrement } from '../../redux/_actions/orders'
 
+import Icon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-community/async-storage';
+import {Card} from 'react-native-paper';
+import {updateFood, getFood} from '../../redux/_actions/menus';
+import {addToCart, Increment, Decrement} from '../../redux/_actions/orders';
+
+// import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 class food extends Component {
   constructor() {
@@ -46,6 +49,7 @@ class food extends Component {
     this.setState({
       table,
     });
+    this.props.dispatch(getFood());
   }
 
   dec = () => {
@@ -60,9 +64,6 @@ class food extends Component {
     }
   };
 
-  componentDidMount() {
-    this.props.dispatch(getFood());
-  }
   loading = () => {
     return (
       <View
@@ -89,83 +90,80 @@ class food extends Component {
 
     // console.log(this.props.menus.Food)
     return (
-      <View style={{flex: 1}}>
-        <Card style={styles.container}>
-          <Card.Content style={{paddingHorizontal: 0, paddingVertical: 0}}>
-            <View style={{flexDirection: 'row'}}>
-              <View>
-                <Image
-                  source={{
-                    uri: item.image,
-                  }}
-                  style={{width: 100, height: 120}}
-                />
-              </View>
-              <View style={{flex: 1, marginHorizontal: 5}}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View style={{marginRight: 15, marginTop: 15}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                      {item.name}
-                    </Text>
-                    <View
-                      style={{
-                        marginTop: 15,
-                        flex: 1,
-                        justifyContent: 'flex-end',
-                      }}>
-                      <Text style={{fontSize: 16}}>Rp. {rupiah}</Text>
+      <SafeAreaView style={{flex: 1}}>
+        {/* <SkeletonPlaceholder backgroundColor='#d0d0d0'> */}
+          <Card style={styles.container}>
+            <Card.Content style={{paddingHorizontal: 0, paddingVertical: 0}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{borderColor:'#e37171'}}>
+                  <Image
+                    source={{
+                      uri: item.image,
+                    }}
+                    style={{width: 100, height: 120, justifyContent: 'center'}}
+                  />
+                </View>
+                <View style={{flex: 1, marginHorizontal: 5}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={{marginRight: 15, marginTop: 15}}>
+                      <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                        {item.name}
+                      </Text>
+                      <View
+                        style={{
+                          paddingVertical: 15,
+                          flex: 1,
+                          justifyContent: 'flex-end',
+                        }}>
+                        <Text style={{fontSize: 16}}>Rp. {rupiah}</Text>
+                      </View>
                     </View>
-                  </View>
-                    {
-                      item.selected == false && 
-                  <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
+
+                    {item.selected == false && (
+                      <View style={{marginTop: 20, marginLeft: 10}}>
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToCart(item, this.props.transaction.data)}>
-                          <MaterialIcons
-                            name="add-shopping-cart"
-                            size={40}
-                            color={'#e37171'}/>
-                        </TouchableOpacity>
-                      {/* </View> */}
-                    </View>
-                    }
-                    {
-                      item.selected == true && 
-                     <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
-                          {/* <Text> */}
-                          <MaterialIcons
-                            name="add-shopping-cart"
-                            size={40}
-                            color={'#e37171'}
+                            this.addToCart(item, this.props.transaction.data)
+                          }>
+                          <View>
+                            <MaterialIcons
+                              name="add-shopping-cart"
+                              size={40}
+                              color={'#e37171'}
                             />
-                            {/* </Text> */}
-                      {/* </View> */}
-                     </View>
-                    }
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    {item.selected == true && (
+                      <View style={{marginTop: 20, marginLeft: 10}}>
+                        <View>
+                          <Icon name="checkcircle" color="#d0d0d0" size={25} />
+                        </View>
+                      </View>
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-          </Card.Content>
-        </Card>
-      </View>
+            </Card.Content>
+          </Card>
+        {/* </SkeletonPlaceholder> */}
+      </SafeAreaView>
     );
   };
 
   render() {
     const extractKey = ({id}) => id.toString();
     return (
-      <View style={{flex:1}}>
+      <View style={{flex: 1}}>
         <View>
           {this.props.menus.isLoading == true && this.loading()}
-          {this.props.menus.isLoading == false && 
-            <View>
+          {this.props.menus.isLoading == false && (
+            // <View>
               <FlatList
                 snapToInterval={270}
                 decelerationRate="normal"
@@ -175,8 +173,8 @@ class food extends Component {
                 extraData={this.props.menus.food}
                 renderItem={this.renderItem}
               />
-            </View>
-          }
+            // </View>
+          )}
         </View>
       </View>
     );

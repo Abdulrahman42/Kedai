@@ -6,11 +6,11 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ToastAndroid,
   ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Card} from 'react-native-paper';
 import { getDessert, updateDessert} from '../../redux/_actions/menus';
@@ -46,6 +46,7 @@ class dessert extends Component {
     this.setState({
       table,
     });
+    this.props.dispatch(getDessert());
   }
 
   dec = () => {
@@ -60,9 +61,6 @@ class dessert extends Component {
     }
   };
 
-  componentDidMount() {
-    this.props.dispatch(getDessert());
-  }
   loading = () => {
     return (
       <View
@@ -87,7 +85,7 @@ class dessert extends Component {
       rupiah += separator + ribuan.join('.');
     }
 
-    // console.log(this.props.menus.Food)
+    // console.log(this.props.menus.dessert)
     return (
       <View style={{flex: 1}}>
         <Card style={styles.container}>
@@ -123,7 +121,6 @@ class dessert extends Component {
                     {
                       item.selected == false && 
                   <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
                         <TouchableOpacity
                           onPress={() =>
                             this.addToCart(item, this.props.transaction.data)}>
@@ -132,22 +129,15 @@ class dessert extends Component {
                             size={40}
                             color={'#e37171'}/>
                         </TouchableOpacity>
-                      {/* </View> */}
                     </View>
                     }
                     {
                       item.selected == true && 
-                     <View style={{marginTop: 20, marginLeft: 10}}>
-                      {/* <View> */}
-                          {/* <Text> */}
-                          <MaterialIcons
-                            name="add-shopping-cart"
-                            size={40}
-                            color={'#e37171'}
-                            />
-                            {/* </Text> */}
-                      {/* </View> */}
-                     </View>
+                      <View style={{marginTop: 20, marginLeft: 10}}>
+                      <View>
+                        <Icon name="checkcircle" color="#d0d0d0" size={25} />
+                      </View>
+                    </View>
                     }
                 </View>
               </View>
@@ -165,7 +155,7 @@ class dessert extends Component {
         <View>
           {this.props.menus.isLoading == true && this.loading()}
           {this.props.menus.isLoading == false && 
-            <View>
+            // <View>
               <FlatList
                 snapToInterval={270}
                 decelerationRate="normal"
@@ -175,7 +165,7 @@ class dessert extends Component {
                 extraData={this.props.menus.dessert}
                 renderItem={this.renderItem}
               />
-            </View>
+            // </View>
           }
         </View>
       </View>

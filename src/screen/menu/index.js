@@ -6,30 +6,65 @@ import {
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
-import {createAppContainer} from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-import tabnavigation from '../../navigation/tabnavigation';
 import {Button} from 'react-native-paper';
 import {connect} from 'react-redux';
-const AppIndex = createAppContainer(tabnavigation);
+import AppIndex from '../../navigation/tabnavigation';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {timerOn, setTimer} from '../../redux/_actions/timer';
+import Icons from 'react-native-vector-icons/AntDesign';
 
-class App extends Component {
+class index extends Component {
   constructor() {
     super();
     this.state = {
       table: '',
-      timer: 0,
+      // second: 0,
+      // minute: 0,
       isi: false,
+      time: 0,
     };
   }
+  timer = async () => {
+    await this.setState({
+      time: this.state.time + 1,
+    });
+    await this.props.dispatch(timerOn(this.state.time));
+  };
+  dateTime = time => {
+    let Menit = Math.floor(time / 60);
+    let Detik = time % 60;
+    return Menit + ':' + Detik;
+  };
 
   async componentDidMount() {
     const table = await AsyncStorage.getItem('tableNumber');
     this.setState({
       table,
     });
+    this.set = setInterval(this.timer, 1000);
+    await this.props.dispatch(setTimer(this.set));
+    // this.interval = setInterval(
+    //   () => this.setState(prevState => ({second: prevState.second + 1})),
+    //   1000,
+    // );
+
+    // this.interval = setInterval(
+    //   () =>
+    //     this.setState(prevState => ({minute: prevState.minute + 1, second: 0})),
+    //   59000,
+    // );
   }
 
+  // componentDidUpdate() {
+  //   if (this.state.second === 60) {
+  //     // clearInterval(this.interval);
+  //   }
+  // }
+
+  // async componentWillUnmount() {
+  //   await clearInterval(this.interval);
+  // }
   loading = () => {
     return (
       <View
@@ -43,33 +78,23 @@ class App extends Component {
       </View>
     );
   };
-  //   renderItem = ({ item }) => {
-  //     return (
-  //         <View style={styles.FlatList}>
-  //             <TouchableOpacity underlayColor='white' onPress={() => this.props.navigation.navigate('menu', { rows: item })}>
-  //                 <Card
-  //                     image={{ uri: item.image }}
-  //                 >
-  //                     <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
-  //                 </Card>
-  //             </TouchableOpacity>
-  //         </View >
-  //     )
-  // }
 
   render() {
-    console.warn(this.state.table)
+    // console.warn(this.state.table)
     return (
       <View style={styles.wrapper}>
         <StatusBar backgroundColor="#e37171" barStyle="light-content" />
         <View style={styles.header}>
-          <View>
-            <Text
-              style={{color: '#e37171', fontWeight: 'bold', marginRight: 10}}>
-              No: {this.state.table}
-            </Text>
-            <Text style={{color: '#e37171'}}>30:23:00</Text>
-          </View>
+          <Text style={{color: '#d0d0d0', fontWeight: 'bold', marginRight: 10}}>
+            <Icon name="table" size={14} /> No: {this.state.table}
+          </Text>
+          <Text style={{color: '#d0d0d0'}}>
+            {' '}
+            <Icon name="clock" size={14} />
+            &nbsp;
+            {/* {this.state.minute}m:{this.state.second}s */}
+            {this.dateTime(this.state.time)}
+          </Text>
         </View>
 
         <AppIndex />
@@ -80,7 +105,7 @@ class App extends Component {
               paddingVertical: 5,
               paddingHorizontal: 5,
             }}>
-            <View style={{width: '100%'}}>
+            <View style={{width: '100%', marginBottom: 5}}>
               <Button style={{backgroundColor: '#d0d0d0'}} mode="contained">
                 List Order
               </Button>
@@ -93,7 +118,7 @@ class App extends Component {
               paddingVertical: 5,
               paddingHorizontal: 5,
             }}>
-            <View style={{width: '100%'}}>
+            <View style={{width: '100%', marginBottom: 5}}>
               <Button
                 style={{backgroundColor: '#e37171'}}
                 mode="contained"
@@ -113,10 +138,11 @@ const mapStateToProps = state => {
     categories: state.categories,
     transaction: state.transaction,
     orders: state.orders,
+    timer: state.timer
   };
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(index);
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -127,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#e37171',
-    paddingHorizontal: 18,
+    paddingHorizontal: 10,
     paddingTop: 5,
   },
 });

@@ -8,8 +8,9 @@ import {
   FlatList,
   ActivityIndicator,
   Alert,
+  StatusBar,
 } from 'react-native';
-
+import {Card} from 'react-native-paper';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -19,7 +20,11 @@ import {
   pushCart,
   UPDATE,
   DELETE,
-} from '../redux/_action/orders';
+} from '../redux/_actions/orders';
+
+import Icons from 'react-native-vector-icons/FontAwesome5';
+import { timerOn } from '../redux/_actions/timer'
+import Icon from 'react-native-vector-icons/AntDesign';
 import {FALSE, FALSE_DRINK, FALSE_DESSERT} from '../redux/_actions/menus';
 class order extends Component {
   constructor() {
@@ -27,17 +32,39 @@ class order extends Component {
     this.state = {
       table: '',
       total: 0,
+      // second: 0,
+      // minute: 0,
+      time:0,
       onConfirm: false,
       pressConf: true,
+      transactionId: 0
     };
   }
+  _count = () => {
+    totalku = 0;
+    this.props.orders.cart.map(item => {
+      let data = item.price * item.qty;
+      totalku = data + totalku;
+    });
+    this.setState({
+      total: totalku,
+    });
+  };
   async componentDidMount() {
     const table = await AsyncStorage.getItem('tableNumber');
+    const id = await AsyncStorage.getItem('transactionId');
     this.setState({
       table,
+      transactionId: id
     });
     await this._count();
+    // await this.props.dispatch(timerOn(this.props.timer.count))
+
   }
+  // componentDidUpdate() {
+  //   if (this.state.second === 60) {
+  //   }
+  // }
   inc = async item => {
     await this.props.dispatch(
       Increment(item, this.props.orders.cart, this.props.orders.cart),
@@ -72,7 +99,7 @@ class order extends Component {
       await this.props.dispatch(
         Decrement(item, this.props.orders.cart, this.props.orders.cart),
       );
-      // await this.props.dispatch(FALSE(item, this.props.menus.data, this.props.menus.data))
+      await this.props.dispatch(FALSE(item, this.props.menus.data, this.props.menus.data))
       await this._count();
     }
   };
@@ -84,7 +111,7 @@ class order extends Component {
           alignItems: 'center',
           alignContent: 'center',
         }}>
-        <ActivityIndicator size={30} color={yellow} />
+        <ActivityIndicator size={30} color="#e37171" />
       </View>
     );
   };
@@ -100,7 +127,10 @@ class order extends Component {
       onConfirm: true,
       pressConf: false,
     });
+    
+    // this.props.dispatch(RESET(this.props.orders.cart));
   };
+
 
   onConf = item => {
     Alert.alert('Are You Sure To This Order', 'Please Check Again', [
@@ -116,6 +146,11 @@ class order extends Component {
       },
     ]);
   };
+  dateTime = (time) => {
+    let Menit = Math.floor(time / 60);
+    let Detik = time % 60;
+    return Menit + ":" + Detik;
+}
 
   toRupiah = number => {
     let rupiah = '';
@@ -136,57 +171,58 @@ class order extends Component {
   };
   renderItem = ({item}) => {
     return (
-      <View style={styles.FlatList}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}>
-          <View>
-            <Text style={{fontSize: 15, color: yellow, fontWeight: 'bold'}}>
-              {item.name}
-            </Text>
-            <Text style={{fontSize: 24, color: night, fontWeight: 'bold'}}>
-              {this.toRupiah(item.price * item.qty)}
-            </Text>
-          </View>
+      <View style={{flex: 1}}>
+        <Card style={styles.container}>
+          <Card.Content style={{paddingHorizontal: 0, paddingVertical: 0}}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{borderColor: 'green', borderRadius: 7, padding: 4}}>
+                <Image
+                  source={{
+                    uri: item.image,
+                  }}
+                  style={{width: 80, height: 80}}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{fontSize: 15, fontWeight: 'bold'}}>
+                  {item.name}
+                </Text>
+                <Text
+                  style={{fontSize: 24, color: 'black', fontWeight: 'bold'}}>
+                  {this.toRupiah(item.price * item.qty)}
+                </Text>
+              </View>
 
-          {this.state.pressConf == true && (
-            <View
-              style={{
-                height: 30,
-                width: 90,
-                backgroundColor: white,
-                elevation: 2,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingLeft: 5,
-                paddingRight: 5,
-                borderRadius: 5,
-                marginRight: 3,
-              }}>
-              <TouchableOpacity onPress={() => this.dec(item)}>
-                <View>
-                  <Icon name="minus" color="#00a663" size={20} />
+              {this.state.pressConf == true && (
+                <View style={styles.qty}>
+                  <TouchableOpacity onPress={() => this.dec(item)}>
+                    <View>
+                      <Icon name="minus" color="#e37171" size={20} />
+                    </View>
+                  </TouchableOpacity>
+
+                  <Text style={{fontWeight: 'bold', color: 'black'}}>
+                    {item.qty}
+                  </Text>
+
+                  <TouchableOpacity onPress={() => this.inc(item)}>
+                    <View>
+                      <Icon name="plus" color="#e37171" size={20} />
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-              <Text style={{fontWeight: 'bold', color: night}}>{item.qty}</Text>
-              <TouchableOpacity onPress={() => this.inc(item)}>
-                <View>
-                  <Icon name="plus" color="#00a663" size={20} />
+              )}
+
+              {this.state.pressConf == false && (
+                <View style={{marginLeft:15}}>
+
+                <Icon name="checkcircle" color="#e37171" size={23} />
                 </View>
-              </TouchableOpacity>
+              )}
             </View>
-          )}
-
-          {this.state.pressConf == false && (
-            <Icon name="checkcircle" color="#00a663" size={23} />
-          )}
-        </View>
+          </Card.Content>
+        </Card>
       </View>
     );
   };
@@ -197,42 +233,29 @@ class order extends Component {
     let tId = `${this.props.transaction.data.id}`;
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={white} barStyle="dark-content" />
+        <StatusBar backgroundColor="#e37171" barStyle="light-content" />
         <View style={styles.header}>
-          <View>
-            <Text style={styles.textHeader}>Nativex</Text>
-          </View>
-          <View style={styles.table}>
-            <Text style={{color: night, fontWeight: 'bold', marginRight: 10}}>
-              No: {this.state.table}
-            </Text>
-            <Text style={{color: night}}>30:23:00</Text>
-          </View>
+          <Text style={{color: '#d0d0d0', fontWeight: 'bold', marginRight: 10}}>
+            <Icon name="table" size={14} /> No: {this.state.table}
+          </Text>
+          <Text style={{color: '#d0d0d0'}}>
+            {' '}
+            <Icons name="clock" size={14} />
+            &nbsp;
+            {/* {this.state.minute}m:{this.state.second}s */}
+            {this.dateTime(this.state.timer)}
+          </Text>
         </View>
         <Text
           style={{
             fontSize: 24,
-            color: night,
+            color: 'black',
             fontWeight: 'bold',
             textAlign: 'right',
             paddingRight: 30,
           }}>
           {this.toRupiah(this.state.total)}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingLeft: 30,
-            paddingRight: 30,
-            paddingTop: 10,
-            paddingBottom: 10,
-          }}>
-          <View
-            style={{height: 3, backgroundColor: 'lightgrey', width: '60%'}}
-          />
-          <View style={{height: 3, backgroundColor: '#00a663', width: '40%'}} />
-        </View>
-
         <FlatList
           snapToInterval={270}
           decelerationRate="normal"
@@ -245,7 +268,7 @@ class order extends Component {
         <View
           style={{
             height: 50,
-            backgroundColor: white,
+            backgroundColor: 'white',
             width: '100%',
             flexDirection: 'row',
             marginBottom: 10,
@@ -253,13 +276,12 @@ class order extends Component {
           {this.props.orders.cart.length >= 1 && (
             <TouchableOpacity
               style={{
-                backgroundColor: '#00a663',
+                backgroundColor: '#e37171',
                 height: 43,
                 width: '65%',
                 elevation: 3,
                 justifyContent: 'space-evenly',
-                borderTopRightRadius: 10,
-                borderBottomRightRadius: 10,
+                marginLeft: 5,
                 alignItems: 'center',
                 alignContent: 'center',
                 flexDirection: 'row',
@@ -267,9 +289,7 @@ class order extends Component {
               }}
               onPress={this.onConf}>
               <View>
-                <Text style={{color: white, fontWeight: 'bold', fontSize: 17}}>
-                  Confirm
-                </Text>
+                <Text style={{fontWeight: 'bold', fontSize: 14}}>Confirm</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -277,11 +297,12 @@ class order extends Component {
             <View
               style={{
                 borderWidth: 2,
-                borderColor: '#00a663',
-                backgroundColor: white,
+                borderColor: '#d0d0d0',
+                backgroundColor: '#e37171',
                 height: 43,
                 width: '65%',
                 elevation: 3,
+                marginLeft: 5,
                 justifyContent: 'space-evenly',
                 borderTopRightRadius: 10,
                 borderBottomRightRadius: 10,
@@ -291,7 +312,7 @@ class order extends Component {
                 marginRight: 10,
               }}>
               <Text
-                style={{color: '#00a663', fontWeight: 'bold', fontSize: 17}}>
+                style={{ fontWeight: 'bold', fontSize: 14}}>
                 Confirmed
               </Text>
             </View>
@@ -300,18 +321,19 @@ class order extends Component {
           {this.state.onConfirm == false && (
             <View
               style={{
-                height: 43,
-                width: '40%',
+                height: 30,
+                width: '30%',
                 borderRadius: 10,
                 borderWidth: 2,
                 borderColor: 'lightgrey',
-                backgroundColor: white,
+                // backgroundColor: 'white',
                 elevation: 3,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Text
-                style={{color: 'lightgrey', fontWeight: 'bold', fontSize: 17}}>
+                style={{color: '#d0d0d0', fontWeight: 'bold', fontSize: 15}}>
+                <Icon name="calculator" size={14} />
                 Bill
               </Text>
             </View>
@@ -319,17 +341,17 @@ class order extends Component {
           {this.state.onConfirm == true && (
             <TouchableOpacity
               style={{
-                height: 43,
-                width: '40%',
+                height: 30,
+                width: '30%',
                 borderRadius: 10,
-                backgroundColor: yellow,
                 elevation: 3,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => this.props.navigation.navigate('bill')}>
-              <View>
-                <Text style={{color: white, fontWeight: 'bold', fontSize: 17}}>
+              onPress={() =>  this.props.navigation.navigate('bill')}>
+              <View style={{color: '#114357'}}>
+                <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                  <Icon name="calculator" size={14} />
                   Bill
                 </Text>
               </View>
@@ -346,6 +368,7 @@ const mapStateToProps = state => {
     orders: state.orders,
     transaction: state.transaction,
     menus: state.menus,
+    timer: state.timer
   };
 };
 
@@ -363,7 +386,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: white,
+    // marginHorizontal: 1,
+    marginVertical: 10,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
   },
   FlatList: {
     flex: 1,
@@ -393,12 +424,12 @@ const styles = StyleSheet.create({
   textContent: {
     marginLeft: 20,
     fontSize: 15,
-    color: night,
+    color: 'black',
     width: '70%',
   },
   textHeader: {
     fontSize: 23,
-    color: night,
+    color: 'black',
     fontWeight: 'bold',
   },
   footer: {
@@ -414,22 +445,25 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingLeft: 20,
   },
-  qr_code: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    marginLeft: 20,
-    backgroundColor: yellow,
-    height: 50,
-    width: '20%',
-    borderTopLeftRadius: 30,
-    borderBottomLeftRadius: 30,
-    padding: 10,
-  },
   bottom: {
     height: '10%',
     width: '80%',
-    backgroundColor: night,
+    backgroundColor: 'black',
     borderRadius: 30,
+  },
+  qty: {
+    flex: 1,
+    height: 30,
+    width: 90,
+    backgroundColor: 'white',
+    elevation: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 5,
+    marginRight: 3,
+    marginBottom: 5,
   },
 });

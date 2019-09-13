@@ -1,6 +1,8 @@
 const initialState = {
     isLoading: true,
     data: '',
+    order:[],
+    transaction:[],
     message: ''
 }
 
@@ -37,7 +39,7 @@ export default function categories(state = initialState, action) {
         case 'GET_TRANSACTION_FULFILLED':
             return {
                 ...state,
-                data: action.payload.data,
+                data: action.payload.data.data,
                 message: action.payload.data.message,
                 isLoading: false
             }
@@ -48,7 +50,23 @@ export default function categories(state = initialState, action) {
                 message: action.payload.data.message,
                 isLoading: false
             }
-
+            case 'UPDATE_TRANSACTION_PENDING':
+                    return {
+                        ...state,
+                        isLoading: true
+                    }
+                case 'UPDATE_TRANSACTION_FULFILLED':
+                    return {
+                        ...state,
+                        data: action.payload.data,
+                        isLoading: false
+                    }
+                case 'UPDATE_TRANSACTION_REJECTED':
+                    return {
+                        ...state,
+                        data: null,
+                        isLoading: false
+                    }
         default:
             return state
     }

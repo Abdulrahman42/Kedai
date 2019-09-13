@@ -8,6 +8,7 @@ export const addToCart = (data, id) => {
         transactionId: id,
         price: data.price,
         qty: 1,
+        image: data.image,
         name: data.name,
         categoryId: data.categoryId,
         status: 0
@@ -21,7 +22,7 @@ export const addToCart = (data, id) => {
 export const getCart = (transactionId) => {
     return {
         type: 'GET_CART',
-        payload: axios.get(env.host + 'order/' + transactionId)
+        payload: axios.get(env.host + 'order/transaction' + transactionId)
     }
 }
 

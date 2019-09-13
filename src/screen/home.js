@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import {
+  Text,
   StyleSheet,
   View,
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {addTransaction} from '../redux/_actions/transaction';
-import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
+import {connect} from 'react-redux';
+import {addTransaction} from '../redux/_actions/transaction';
 
 class home extends Component {
   constructor() {
@@ -18,9 +18,12 @@ class home extends Component {
     this.state = {
       table: null,
       isPress: false,
-    };
+    }
   }
-
+  // this.clearStorage()
+  clearStorage() {
+    AsyncStorage.clear()
+}
   onTable = table => {
     this.setState({table});
   };
@@ -61,7 +64,7 @@ class home extends Component {
           </View>
           <View style={styles.content}>
             <Text style={{color: '#d0d0d0', fontSize: 20, marginTop: 15}}>
-              Masukan Nomor Meja
+              Input Your Table Number
             </Text>
             <TextInput
               style={styles.input}
@@ -69,19 +72,15 @@ class home extends Component {
               keyboardType="number-pad"
               onChangeText={this.onTable}></TextInput>
             {this.state.isPress == false && (
-              <TouchableOpacity onPress={this.tableSend}>
-                <View style={styles.button}>
-                  <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
-                </View>
+              <TouchableOpacity style={styles.button} onPress={this.tableSend}>
+                <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
               </TouchableOpacity>
             )}
             {this.state.isPress == true && (
-              <TouchableOpacity onPress={this.tableSend}>
-                <View style={styles.button}>
-                  <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
-                  <ActivityIndicator size={30} color="white" />
-                </View>
-              </TouchableOpacity>
+              <View style={styles.button} onPress={this.tableSend}>
+                <Text style={{color: 'white', fontSize: 15}}>Submit</Text>
+                <ActivityIndicator size={25} color="white" />
+              </View>
             )}
           </View>
         </View>
@@ -136,5 +135,8 @@ const styles = StyleSheet.create({
     height: 40,
     width: '90%',
     marginBottom: 15,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
   },
 });

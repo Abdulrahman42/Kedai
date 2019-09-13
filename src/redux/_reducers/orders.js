@@ -58,7 +58,7 @@ export default function orders(state = initialState, action) {
 
         case 'UPDATE_ORDERS':
             let dataOrders = action.datapatch.findIndex(y => y.menuId == action.payload.menuId)
-            console.log(action.datapatch[dataOrders])
+            // console.log(action.datapatch[dataOrders])
             let statusNew = { ...action.datapatch[dataOrders], status: 1 }
             action.datapatch = action.datapatch.splice(dataOrders, 1, statusNew)
             let dataStatus = [...action.datafix, statusNew]

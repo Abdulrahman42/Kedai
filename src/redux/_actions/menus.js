@@ -37,3 +37,30 @@ export const updateDessert = (item, dessert, dessertfix) => ({
     dessert: dessert,
     dessertfix: dessertfix
 })
+
+export const FALSE = (item, menu, menufix) => {
+    return {
+        type: 'FALSE_MENU',
+        payload: item,
+        menu,
+        menufix
+    }
+}
+
+export const FALSE_DRINK = (item, menu, menufix) => {
+    return {
+        type: 'FALSE_DRINK',
+        payload: item,
+        menu,
+        menufix
+    }
+}
+
+export const FALSE_DESSERT = (item, menu, menufix) => {
+    return {
+        type: 'FALSE_DESSERT',
+        payload: item,
+        menu,
+        menufix
+    }
+}

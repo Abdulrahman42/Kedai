@@ -10,7 +10,7 @@ This project is still on very early development stage. If you want to use for pr
 Kedai DW is modern app for self service restaurant. we are ready to help solve restaurant problems with minimum operational costs.  
 
 ## Demo App
-  (https://drive.google.com/open?id=1MRxdyT2NWm0XraJKFhE6S9DlO-9PohOF)
+  [![Kedai DW Video](http://i3.ytimg.com/vi/bd4LKTMlx9Y/maxresdefault.jpg)](https://youtu.be/bd4LKTMlx9Y)
 
 ## Screenshots
 

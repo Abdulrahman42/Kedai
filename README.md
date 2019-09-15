@@ -15,15 +15,15 @@ Kedai DW is modern app for self service restaurant. we are ready to help solve r
 ## Screenshots
 
 <p float="left">
-  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567646694/KEDAI_DW/Screenshot_20190905-014032_yaqxym.png" width="200" height="350" alt="Choose table number"/>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568511161/KEDAI_DW/Screenshot_2019-09-14-20-30-33_m8afwb.png" width="200" height="350" alt="Choose table number"/>
 
- <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568055525/KEDAI_DW/Screenshot_2019-09-09-13-57-25_ypzzjj.png" width="200" height="350" alt="Choose category"/>
+ <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568511168/KEDAI_DW/Screenshot_2019-09-14-20-30-44_m8u4f6.png" width="200" height="350" alt="Choose menu"/>
  
- <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519550/KEDAI_DW/Screenshot_20190903-204526_p14xsu.png" width="200" height="350" alt="View bill"/>
+ <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568511164/KEDAI_DW/Screenshot_2019-09-14-20-31-00_a7atjy.png" width="200" height="350" alt="order"/>
  
- <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567856144/KEDAI_DW/Screenshot_20190907-183311_zxirte.png" width="200" height="350" alt="Choose menu"/>
+ <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568511167/KEDAI_DW/Screenshot_2019-09-14-20-31-11_l5schu.png" width="200" height="350" alt="bill"/>
  
-  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1567519558/KEDAI_DW/Screenshot_20190903-204532_dovq24.png" width="200" height="350" alt="Choose menu"/>
+  <img src="https://res.cloudinary.com/abdulrahman42/image/upload/v1568511164/KEDAI_DW/Screenshot_2019-09-14-20-31-19_hiz7zs.png" width="200" height="350" alt="done"/>
   
 </p>
 
